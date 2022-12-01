@@ -1,0 +1,58 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - merge-verify-files/**
+      - actions/.github/workflows/test-merge-verify-files.yml
+  pull_request:
+    paths:
+      - merge-verify-files/**
+      - actions/.github/workflows/test-merge-verify-files.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up competitive-verifier
+        uses: ./setup
+        with:
+          python-version: "3.9"
+          cache-pip: true
+
+      - name: Use glob
+        id: glob
+        uses: ./merge-verify-files
+        with:
+          verify-files: merge-verify-files/tests/file*.json
+          output-path: merged-glob.json
+
+      - name: Use list
+        id: list
+        uses: ./merge-verify-files
+        with:
+          verify-files: |
+            merge-verify-files/tests/file1.json
+            merge-verify-files/tests/file2.json
+          output-path: merged-list.json
+
+      - name: Check glob
+        uses: competitive-verifier/verifier-object-equality-action@v1
+        with:
+          class: VerificationInput
+          file1: ${{steps.glob.outputs.json-path}}
+          file2: merge-verify-files/tests/merged.json
+
+      - name: Check list
+        uses: competitive-verifier/verifier-object-equality-action@v1
+        with:
+          class: VerificationInput
+          file1: ${{steps.list.outputs.json-path}}
+          file2: merge-verify-files/tests/merged.json

@@ -1,0 +1,30 @@
+name: Merge verify files
+description: "A composite action that call competitive-verifier merge-input"
+author: "Kzrnm"
+branding:
+  color: blue
+  icon: target
+inputs:
+  verify-files:
+    description: "The file path of verify_files.json."
+    required: true
+  output-path:
+    description: "The file path of merged json."
+    required: true
+    default: "./verify_files.json"
+outputs:
+  json-path:
+    description: "The file path of merged json."
+    value: ${{ steps.merge.outputs.json-path }}
+runs:
+  using: composite
+  steps:
+    - name: merge
+      id: merge
+      shell: bash
+      run: |
+        competitive-verifier merge-input $FILES | tee "$OUTPUT_FILE"
+        echo "json-path=$OUTPUT_FILE" >> $GITHUB_OUTPUT
+      env:
+        FILES: ${{ inputs.verify-files }}
+        OUTPUT_FILE: ${{ inputs.output-path }}
