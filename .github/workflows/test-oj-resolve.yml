@@ -1,0 +1,80 @@
+name: Test oj-resolve
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up competitive-verifier
+        uses: ./setup
+        with:
+          python-version: "3.9"
+          cache-pip: true
+
+      - name: oj-resolve with include
+        id: include
+        uses: ./oj-resolve
+        with:
+          include: oj-resolve/examples/python
+          output-path: ./verify-files.json
+      - name: oj-resolve with exclude
+        id: exclude
+        uses: ./oj-resolve
+        with:
+          exclude: |
+            oj-resolve/examples/java
+            scripts
+          output-path: ${{runner.temp}}/verify-files.json
+      - name: oj-resolve all
+        id: all
+        uses: ./oj-resolve
+        with:
+          output-path: verify-files-all.json
+      - name: oj-resolve with awk
+        id: awk
+        uses: ./oj-resolve
+        with:
+          include: oj-resolve/examples/
+          config: oj-resolve/examples/awk-config.toml
+          output-path: verify-files-with-awk.json
+      - name: Check path
+        run: |
+          test "${{steps.include.outputs.json-path}}" = "./verify-files.json"
+          test "${{steps.exclude.outputs.json-path}}" = "$RUNNER_TEMP/verify-files.json"
+          test "${{steps.all.outputs.json-path}}" = "verify-files-all.json"
+          test "${{steps.awk.outputs.json-path}}" = "verify-files-with-awk.json"
+
+      - name: Check awk
+        run: |
+          cat "${{steps.awk.outputs.json-path}}" | jq '.files."oj-resolve/examples/awk/circle.test.awk"' | grep "oj-resolve/examples/awk/circle.awk"
+
+      - name: equal
+        uses: competitive-verifier/verifier-object-equality-action@v1
+        with:
+          class: VerificationInput
+          file1: ${{steps.include.outputs.json-path}}
+          file2: ${{steps.exclude.outputs.json-path}}
+      - name: Not equal
+        uses: competitive-verifier/verifier-object-equality-action@v1
+        with:
+          class: VerificationInput
+          file1: ${{steps.include.outputs.json-path}}
+          file2: ${{steps.all.outputs.json-path}}
+          not: true
+      - name: Not equal awk
+        uses: competitive-verifier/verifier-object-equality-action@v1
+        with:
+          class: VerificationInput
+          file1: ${{steps.include.outputs.json-path}}
+          file2: ${{steps.awk.outputs.json-path}}
+          not: true
