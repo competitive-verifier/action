@@ -39,7 +39,7 @@ jobs:
           https://onlinejudge.u-aizu.ac.jp/courses/lesson/2/ITP1/1/ITP1_1_A"
           test "${{ steps.env.outputs.problems-hash }}"  = "d54c5839ae3a5164f4b20c28a39a90cf"
 
-          test "$(ls .competitive-verifier/cache/*/test -d | wc -l)" = 3
+          test "$(ls .competitive-verifier/cache/problems/*/test -d | wc -l)" = 3
           rm -rf .competitive-verifier/cache
 
       - name: Download with verify-files
@@ -53,4 +53,4 @@ jobs:
           test "${{ steps.with.outputs.problems }}"  = "https://onlinejudge.u-aizu.ac.jp/courses/lesson/2/ITP1/1/ITP1_1_A"
           test "${{ steps.with.outputs.problems-hash }}"  = "1fe359fd6574ab4a8b8ad5a6bb27d373"
 
-          test "$(ls .competitive-verifier/cache/*/test -d | wc -l)" = 1
+          test "$(ls .competitive-verifier/cache/problems/*/test -d | wc -l)" = 1
