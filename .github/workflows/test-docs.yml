@@ -1,10 +1,16 @@
-name: Test
+name: Test docs
 
 on:
   push:
     branches:
       - main
+    paths:
+      - docs/**
+      - actions/.github/workflows/test-docs.yml
   pull_request:
+    paths:
+      - docs/**
+      - actions/.github/workflows/test-docs.yml
   workflow_dispatch:
 
 jobs:
