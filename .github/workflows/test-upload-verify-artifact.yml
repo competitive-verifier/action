@@ -6,11 +6,11 @@ on:
       - main
     paths:
       - upload-verify-artifact/**
-      - actions/.github/workflows/test-upload-verify-artifact.yml
+      - .github/workflows/test-upload-verify-artifact.yml
   pull_request:
     paths:
       - upload-verify-artifact/**
-      - actions/.github/workflows/test-upload-verify-artifact.yml
+      - .github/workflows/test-upload-verify-artifact.yml
   workflow_dispatch:
 
 jobs:

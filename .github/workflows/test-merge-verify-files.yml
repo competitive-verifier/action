@@ -6,11 +6,11 @@ on:
       - main
     paths:
       - merge-verify-files/**
-      - actions/.github/workflows/test-merge-verify-files.yml
+      - .github/workflows/test-merge-verify-files.yml
   pull_request:
     paths:
       - merge-verify-files/**
-      - actions/.github/workflows/test-merge-verify-files.yml
+      - .github/workflows/test-merge-verify-files.yml
   workflow_dispatch:
 
 jobs:

@@ -6,11 +6,11 @@ on:
       - main
     paths:
       - testing/verifier-object-equality-action/**
-      - actions/.github/workflows/test-verifier-object-equality-action.yml
+      - .github/workflows/test-verifier-object-equality-action.yml
   pull_request:
     paths:
       - testing/verifier-object-equality-action/**
-      - actions/.github/workflows/test-verifier-object-equality-action.yml
+      - .github/workflows/test-verifier-object-equality-action.yml
   workflow_dispatch:
 
 jobs:

@@ -6,11 +6,11 @@ on:
       - main
     paths:
       - oj-resolve/**
-      - actions/.github/workflows/test-oj-resolve.yml
+      - .github/workflows/test-oj-resolve.yml
   pull_request:
     paths:
       - oj-resolve/**
-      - actions/.github/workflows/test-oj-resolve.yml
+      - .github/workflows/test-oj-resolve.yml
   workflow_dispatch:
 
 jobs:

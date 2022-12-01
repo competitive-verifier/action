@@ -6,11 +6,11 @@ on:
       - main
     paths:
       - verify/**
-      - actions/.github/workflows/test-verify.yml
+      - .github/workflows/test-verify.yml
   pull_request:
     paths:
       - verify/**
-      - actions/.github/workflows/test-verify.yml
+      - .github/workflows/test-verify.yml
   workflow_dispatch:
 
 jobs:

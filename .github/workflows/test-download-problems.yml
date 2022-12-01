@@ -6,11 +6,11 @@ on:
       - main
     paths:
       - download-problems/**
-      - actions/.github/workflows/test-download-problems.yml
+      - .github/workflows/test-download-problems.yml
   pull_request:
     paths:
       - download-problems/**
-      - actions/.github/workflows/test-download-problems.yml
+      - .github/workflows/test-download-problems.yml
   workflow_dispatch:
 
 jobs:
