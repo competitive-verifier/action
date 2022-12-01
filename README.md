@@ -5,6 +5,7 @@ See [competitive-verifier/competitive-verifier](https://github.com/competitive-v
 ## Actions
 - [setup](setup)
 - [oj-resolve](oj-resolve)
+- [cs-resolve](cs-resolve)
 - [merge-verify-files](merge-verify-files)
 - [upload-verify-artifact](upload-verify-artifact)
 - [download-problems](download-problems)
