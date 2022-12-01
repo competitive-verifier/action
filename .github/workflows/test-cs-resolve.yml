@@ -1,0 +1,117 @@
+name: Test cs-resolve
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - cs-resolve/**
+      - .github/workflows/test-cs-resolve.yml
+  pull_request:
+    paths:
+      - cs-resolve/**
+      - .github/workflows/test-cs-resolve.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: |
+            7.0.x
+            6.0.x
+      - uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('cs-resolve/**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: setup CompetitiveVerifierCsResolver
+        run: dotnet tool install -g CompetitiveVerifierCsResolver
+      - name: C# test
+        run: |
+          dotnet build cs-resolve/tests/tests.sln -c Release
+
+          dotnet test cs-resolve/tests/Test.MSTest/Test.MSTest.csproj --logger  "CompetitiveVerifier;OutFile=${{runner.temp}}/unittest.MSTest.csv" --no-build  -c Release
+          dotnet test cs-resolve/tests/Test.NUnit/Test.NUnit.csproj --logger  "CompetitiveVerifier;OutFile=${{runner.temp}}/unittest.NUnit.csv" --no-build  -c Release
+          dotnet test cs-resolve/tests/Test.XUnit/Test.XUnit.csproj --logger  "CompetitiveVerifier;OutFile=${{runner.temp}}/unittest.XUnit.csv" --no-build  -c Release
+          dotnet test cs-resolve/tests/UnitTest/UnitTest.csproj --logger  "CompetitiveVerifier;OutFile=${{runner.temp}}/unittest.UnitTest.csv" --no-build  -c Release
+
+          cat ${{runner.temp}}/unittest.*.csv > ${{runner.temp}}/unittest.csv
+
+          dotnet run --project cs-resolve/tests/VerifyApp/VerifyApp.csproj --no-build -c Release > ${{runner.temp}}/problems.json
+
+      - name: cs-resolve
+        id: resolve
+        uses: ./cs-resolve
+        with:
+          solution: cs-resolve/tests/tests.sln
+          include: cs-resolve/tests
+          output-path: ./verify-files.json
+          unittest-result: ${{runner.temp}}/unittest.csv
+          problems: ${{runner.temp}}/problems.json
+
+      - name: Check path
+        run: |
+          test "${{steps.resolve.outputs.json-path}}" = "./verify-files.json"
+
+      # - name: oj-resolve with exclude
+      #   id: exclude
+      #   uses: ./oj-resolve
+      #   with:
+      #     include: oj-resolve/examples/
+      #     exclude: |
+      #       oj-resolve/examples/java
+      #       scripts
+      #     output-path: ${{runner.temp}}/verify-files.json
+      # - name: oj-resolve all
+      #   id: all
+      #   uses: ./oj-resolve
+      #   with:
+      #     output-path: verify-files-all.json
+      # - name: oj-resolve with awk
+      #   id: awk
+      #   uses: ./oj-resolve
+      #   with:
+      #     include: oj-resolve/examples/
+      #     config: oj-resolve/examples/awk-config.toml
+      #     output-path: verify-files-with-awk.json
+      # - name: Check path
+      #   run: |
+      #     test "${{steps.include.outputs.json-path}}" = "./verify-files.json"
+      #     test "${{steps.exclude.outputs.json-path}}" = "$RUNNER_TEMP/verify-files.json"
+      #     test "${{steps.all.outputs.json-path}}" = "verify-files-all.json"
+      #     test "${{steps.awk.outputs.json-path}}" = "verify-files-with-awk.json"
+
+      # - name: Check awk
+      #   run: |
+      #     cat "${{steps.awk.outputs.json-path}}" | jq '.files."oj-resolve/examples/awk/circle.test.awk"' | grep "oj-resolve/examples/awk/circle.awk"
+
+      # - name: equal
+      #   uses: ./testing/verifier-object-equality-action
+      #   with:
+      #     class: VerificationInput
+      #     file1: ${{steps.include.outputs.json-path}}
+      #     file2: ${{steps.exclude.outputs.json-path}}
+      # - name: Not equal
+      #   uses: ./testing/verifier-object-equality-action
+      #   with:
+      #     class: VerificationInput
+      #     file1: ${{steps.include.outputs.json-path}}
+      #     file2: ${{steps.all.outputs.json-path}}
+      #     not: true
+      # - name: Not equal awk
+      #   uses: ./testing/verifier-object-equality-action
+      #   with:
+      #     class: VerificationInput
+      #     file1: ${{steps.include.outputs.json-path}}
+      #     file2: ${{steps.awk.outputs.json-path}}
+      #     not: true

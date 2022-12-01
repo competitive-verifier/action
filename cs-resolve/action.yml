@@ -1,0 +1,54 @@
+name: "oj-resolve"
+description: "A composite action that competitive-verifier oj-resolve"
+author: "Kzrnm"
+branding:
+  color: blue
+  icon: target
+inputs:
+  solution:
+    description: "The file path of solution."
+    required: true
+  output-path:
+    description: "The file path of oj-resolve result json."
+    required: true
+    default: ${{runner.temp}}/verify-files.json
+  include:
+    description: "Argument of oj-resolve --include."
+    required: false
+    default: ""
+  exclude:
+    description: "Argument of oj-resolve --exclude."
+    required: false
+    default: ""
+  unittest-result:
+    description: "Specify unittest result csv path. Argument of oj-resolve --unittest."
+    required: false
+    default: ""
+  problems:
+    description: "output of CompetitiveVerifierProblem. Argument of oj-resolve --problems."
+    required: false
+    default: ""
+  msbuild-properties:
+    description: "MSBuild properties. Argument of oj-resolve --properties."
+    required: false
+    default: ""
+outputs:
+  json-path:
+    description: "The path of verify files json."
+    value: ${{ steps.resolve.outputs.json-path }}
+runs:
+  using: composite
+  steps:
+    - name: cs-resolve
+      shell: bash
+      id: resolve
+      run: |
+        competitive-verifier-cs-resolver ${{inputs.solution}} $unittest $problems $include $exclude $msbuild_props | tee "$OUTPUT_FILE"
+        echo "json-path=$OUTPUT_FILE" >> $GITHUB_OUTPUT
+      env:
+        include: ${{ (inputs.include != '') && '--include' || '' }} ${{inputs.include}}
+        exclude: ${{ (inputs.exclude != '') && '--exclude' || '' }} ${{inputs.exclude}}
+        unittest: ${{ (inputs.unittest-result != '') && '--unittest' || '' }} ${{inputs.unittest-result}}
+        problems: ${{ (inputs.problems != '') && '--problems' || '' }} ${{inputs.problems}}
+        msbuild_props: ${{ (inputs.msbuild-properties != '') && '--properties' || '' }} ${{inputs.msbuild-properties}}
+        OUTPUT_FILE: ${{ inputs.output-path }}
