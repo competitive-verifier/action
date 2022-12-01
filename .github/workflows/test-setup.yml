@@ -4,7 +4,13 @@ on:
   push:
     branches:
       - main
+    paths:
+      - setup/**
+      - actions/.github/workflows/test-setup.yml
   pull_request:
+    paths:
+      - setup/**
+      - actions/.github/workflows/test-setup.yml
   workflow_dispatch:
 
 jobs:
