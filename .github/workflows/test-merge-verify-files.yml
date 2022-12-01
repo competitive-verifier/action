@@ -1,4 +1,4 @@
-name: Test
+name: Test merge-verify-files
 
 on:
   push:

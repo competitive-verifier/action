@@ -1,0 +1,46 @@
+name: Upload competitive-verifier verify_files.json artifact
+description: "A wrapper of actions/upload-artifact for verify_files.json of competitive-verifier."
+author: "Kzrnm"
+branding:
+  color: blue
+  icon: upload
+inputs:
+  file:
+    description: "The file path of verify_files.json."
+    required: true
+    default: verify_files.json
+  artifact-name:
+    description: The name of artifact which contains verify files json.
+    required: false
+    default: ${{ runner.os }}-verify-files-json
+  retention-days:
+    description: "Duration after which artifact will expire in days."
+    required: false
+    default: "1"
+runs:
+  using: composite
+  steps:
+    - name: Validate
+      shell: bash
+      id: validate
+      run: |
+        file="$(echo $file)"
+        echo "$file"
+        if [ ! -f "$file" ] ; then
+          echo "::error::file must be single file."
+          exit 1
+        fi
+        if ! jq . "$file" ; then
+          echo "::error::file must be json file."
+          exit 2
+        fi
+        echo "file=$file" >> $GITHUB_OUTPUT
+      env:
+        file: ${{ inputs.file }}
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: ${{ steps.validate.outputs.file }}
+        retention-days: ${{ inputs.retention-days }}

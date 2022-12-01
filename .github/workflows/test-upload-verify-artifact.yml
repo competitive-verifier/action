@@ -1,0 +1,63 @@
+name: Test upload-verify-artifact
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - upload-verify-artifact/**
+      - actions/.github/workflows/test-upload-verify-artifact.yml
+  pull_request:
+    paths:
+      - upload-verify-artifact/**
+      - actions/.github/workflows/test-upload-verify-artifact.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Upload directory
+        id: directory
+        uses: ./upload-verify-artifact
+        continue-on-error: true
+        with:
+          file: upload-verify-artifact/tests/
+
+      - name: Upload wildcard-multi
+        id: wildcard-multi
+        uses: ./upload-verify-artifact
+        continue-on-error: true
+        with:
+          file: upload-verify-artifact/tests/*.json
+
+      - name: Upload not json
+        id: not-json
+        uses: ./upload-verify-artifact
+        continue-on-error: true
+        with:
+          file: upload-verify-artifact/tests/not_json.txt
+
+      - name: Upload space
+        id: space
+        uses: ./upload-verify-artifact
+        with:
+          file: upload-verify-artifact/tests/sp ace.json
+
+      - name: Upload wildcard single
+        id: wildcard-single
+        uses: ./upload-verify-artifact
+        with:
+          file: upload-verify-artifact/tests/verify*.json
+
+      - name: Test outcome
+        run: |
+          test "${{steps.directory.outcome}}" = 'failure'
+          test "${{steps.wildcard-multi.outcome}}" = 'failure'
+          test "${{steps.not-json.outcome}}" = 'failure'
+          test "${{steps.space.outcome}}" = 'success'
+          test "${{steps.wildcard-single.outcome}}" = 'success'
