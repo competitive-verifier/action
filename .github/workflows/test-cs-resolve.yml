@@ -63,55 +63,20 @@ jobs:
         run: |
           test "${{steps.resolve.outputs.json-path}}" = "./verify-files.json"
 
-      # - name: oj-resolve with exclude
-      #   id: exclude
-      #   uses: ./oj-resolve
-      #   with:
-      #     include: oj-resolve/examples/
-      #     exclude: |
-      #       oj-resolve/examples/java
-      #       scripts
-      #     output-path: ${{runner.temp}}/verify-files.json
-      # - name: oj-resolve all
-      #   id: all
-      #   uses: ./oj-resolve
-      #   with:
-      #     output-path: verify-files-all.json
-      # - name: oj-resolve with awk
-      #   id: awk
-      #   uses: ./oj-resolve
-      #   with:
-      #     include: oj-resolve/examples/
-      #     config: oj-resolve/examples/awk-config.toml
-      #     output-path: verify-files-with-awk.json
-      # - name: Check path
-      #   run: |
-      #     test "${{steps.include.outputs.json-path}}" = "./verify-files.json"
-      #     test "${{steps.exclude.outputs.json-path}}" = "$RUNNER_TEMP/verify-files.json"
-      #     test "${{steps.all.outputs.json-path}}" = "verify-files-all.json"
-      #     test "${{steps.awk.outputs.json-path}}" = "verify-files-with-awk.json"
+      - name: Replace expected path
+        id: expected
+        run: |
+          sed -e "s:{{{PWD}}}:$PWD:g" cs-resolve/tests/expected.json > $RUNNER_TEMP/actual-expected.json
+          echo "json-path=$RUNNER_TEMP/actual-expected.json" >> $GITHUB_OUTPUT
 
-      # - name: Check awk
-      #   run: |
-      #     cat "${{steps.awk.outputs.json-path}}" | jq '.files."oj-resolve/examples/awk/circle.test.awk"' | grep "oj-resolve/examples/awk/circle.awk"
+      - name: Set up competitive-verifier
+        uses: ./setup
+        with:
+          python-version: "3.9"
 
-      # - name: equal
-      #   uses: ./testing/verifier-object-equality-action
-      #   with:
-      #     class: VerificationInput
-      #     file1: ${{steps.include.outputs.json-path}}
-      #     file2: ${{steps.exclude.outputs.json-path}}
-      # - name: Not equal
-      #   uses: ./testing/verifier-object-equality-action
-      #   with:
-      #     class: VerificationInput
-      #     file1: ${{steps.include.outputs.json-path}}
-      #     file2: ${{steps.all.outputs.json-path}}
-      #     not: true
-      # - name: Not equal awk
-      #   uses: ./testing/verifier-object-equality-action
-      #   with:
-      #     class: VerificationInput
-      #     file1: ${{steps.include.outputs.json-path}}
-      #     file2: ${{steps.awk.outputs.json-path}}
-      #     not: true
+      - name: equal
+        uses: ./testing/verifier-object-equality-action
+        with:
+          class: VerificationInput
+          file1: ${{steps.resolve.outputs.json-path}}
+          file2: ${{steps.expected.outputs.json-path}}
