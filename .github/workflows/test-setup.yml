@@ -1,0 +1,37 @@
+name: Test setup
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Python 3.x
+        uses: ./setup
+        with:
+          cache-pip: true
+
+      - name: Python 3.9
+        uses: ./setup
+        with:
+          cache-pip: true
+          python-version: "3.9"
+
+      - name: Python 3.10
+        uses: ./setup
+        id: python310
+        with:
+          python-version: "3.10"
+          ref: eeb93b5c71fb1caac9a439c936c13a384387db84
+      - name: Test 3.10
+        run: |
+          [ ${{ steps.python310.outputs.version }} = "0.0.1" ]

@@ -1,0 +1,69 @@
+name: "Set up competitive-verifier"
+description: "A composite action that set up competitive-verifier command."
+author: "Kzrnm"
+branding:
+  color: blue
+  icon: play-circle
+inputs:
+  repository:
+    description: Specify competitive-verifier repository
+    required: false
+    default: "https://github.com/competitive-verifier/competitive-verifier.git"
+  ref:
+    description: Specify branch, tag or commit of competitive-verifier
+    required: false
+    default: "main"
+  python-version:
+    description: Specify python verify_files2.json
+    required: false
+    default: "3.x"
+  cache-pip:
+    description: "If true, cache pip"
+    required: false
+    default: "false"
+outputs:
+  version:
+    description: "Version of competitive-verifier."
+    value: ${{ steps.install.outputs.version }}
+runs:
+  using: composite
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{inputs.python-version}}
+
+    - uses: actions/cache@v3
+      if: startsWith(runner.os, 'Linux') && fromJson(inputs.cache-pip)
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-competitive-verifier-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-pip-competitive-verifier-
+    - uses: actions/cache@v3
+      if: startsWith(runner.os, 'macOS') && fromJson(inputs.cache-pip)
+      with:
+        path: ~/Library/Caches/pip
+        key: ${{ runner.os }}-pip-competitive-verifier-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-pip-competitive-verifier-
+    - uses: actions/cache@v3
+      if: startsWith(runner.os, 'Windows') && fromJson(inputs.cache-pip)
+      with:
+        path: ~\AppData\Local\pip\Cache
+        key: ${{ runner.os }}-pip-competitive-verifier-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-pip-competitive-verifier-
+
+    - name: Install competitive-verifier
+      shell: bash
+      id: install
+      run: |
+        echo "::group::pip install"
+        pip install "$PACKAGE_URL"
+        echo "::endgroup::"
+        VERSION=$(competitive-verifier --version)
+        echo "version=$VERSION"
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+      env:
+        PACKAGE_URL: "git+${{inputs.repository}}@${{inputs.ref}}"
