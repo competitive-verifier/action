@@ -4,7 +4,13 @@ on:
   push:
     branches:
       - main
+    paths:
+      - check/**
+      - .github/workflows/test-check.yml
   pull_request:
+    paths:
+      - check/**
+      - .github/workflows/test-check.yml
   workflow_dispatch:
 
 jobs:
