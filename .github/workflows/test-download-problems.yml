@@ -30,7 +30,7 @@ jobs:
 
       - name: Download env $COMPETITIVE_VERIFY_FILES_PATH
         id: env
-        uses: ./
+        uses: ./download-problems
 
       - name: Test env
         run: |

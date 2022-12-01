@@ -1,7 +1,7 @@
 {
     "total_seconds": 6.459829,
     "files": {
-        "tests/python/union_find_yosupo.test.py": {
+        "docs/tests/python/union_find_yosupo.test.py": {
             "verifications": [
                 {
                     "status": "success",

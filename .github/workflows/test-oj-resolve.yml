@@ -37,6 +37,7 @@ jobs:
         id: exclude
         uses: ./oj-resolve
         with:
+          include: oj-resolve/examples/
           exclude: |
             oj-resolve/examples/java
             scripts
