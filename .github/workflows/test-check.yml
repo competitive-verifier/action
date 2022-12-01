@@ -1,0 +1,74 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up competitive-verifier
+        uses: ./setup
+        with:
+          python-version: "3.9"
+          cache-pip: true
+
+      - name: Check success
+        id: check-success
+        uses: ./check
+        with:
+          verify-result: check/tests/pyres*/competitive-verifier-result.json
+      - name: Test success
+        run: |
+          [ "${{ steps.check-success.outcome }}" = "success" ]
+          [ "${{ steps.check-success.outputs.result-count }}" = "3" ]
+          [ "${{ steps.check-success.outputs.result-count-success }}" = "3" ]
+          [ "${{ steps.check-success.outputs.result-count-failure }}" = "0" ]
+          [ "${{ steps.check-success.outputs.result-count-skipped }}" = "0" ]
+
+      - name: Check empty
+        id: check-empty
+        uses: ./check
+        with:
+          verify-result: check/tests/pyres3/competitive-verifier-result.json
+      - name: Test empty
+        run: |
+          [ "${{ steps.check-empty.outcome }}" = "success" ]
+          [ "${{ steps.check-empty.outputs.result-count }}" = "0" ]
+          [ "${{ steps.check-empty.outputs.result-count-success }}" = "0" ]
+          [ "${{ steps.check-empty.outputs.result-count-failure }}" = "0" ]
+          [ "${{ steps.check-empty.outputs.result-count-skipped }}" = "0" ]
+
+      - name: Check skipped
+        id: check-skipped
+        uses: ./check
+        with:
+          verify-result: check/tests/contain-skipped.json
+      - name: Test skipped
+        run: |
+          [ "${{ steps.check-skipped.outcome }}" = "success" ]
+          [ "${{ steps.check-skipped.outputs.result-count }}" = "3" ]
+          [ "${{ steps.check-skipped.outputs.result-count-success }}" = "2" ]
+          [ "${{ steps.check-skipped.outputs.result-count-failure }}" = "0" ]
+          [ "${{ steps.check-skipped.outputs.result-count-skipped }}" = "1" ]
+
+      - name: Check failure
+        id: check-failure
+        continue-on-error: true
+        uses: ./check
+        with:
+          verify-result: check/tests/failure-result.json
+      - name: Test failure
+        run: |
+          [ "${{ steps.check-failure.outcome }}" = "failure" ]
+          [ "${{ steps.check-failure.outputs.result-count }}" = "2" ]
+          [ "${{ steps.check-failure.outputs.result-count-success }}" = "1" ]
+          [ "${{ steps.check-failure.outputs.result-count-failure }}" = "1" ]
+          [ "${{ steps.check-failure.outputs.result-count-skipped }}" = "0" ]

@@ -1,0 +1,68 @@
+name: Download competitive-verifier verify_files.json artifact
+description: "A wrapper of actions/download-artifact for verify_files.json of competitive-verifier."
+author: "Kzrnm"
+branding:
+  color: blue
+  icon: download-cloud
+inputs:
+  artifact-name:
+    description: The name of artifact which contains verify files json.
+    required: false
+    default: ${{ runner.os }}-verify-files-json
+  artifact-root:
+    description: Artifacts path.
+    required: false
+    default: ./.verifier.artifacts
+  download-all:
+    description: "If true, the action download all artifacts."
+    required: false
+    default: "false"
+  set-env:
+    description: If true, set verify_files.json path to $COMPETITIVE_VERIFY_FILES_PATH
+    required: false
+    default: "true"
+outputs:
+  artifacts-root:
+    description: Artifacts directory
+    value: ${{inputs.artifact-root}}
+  json-path:
+    description: verify_files.json path
+    value: ${{steps.validate.outputs.file}}
+runs:
+  using: composite
+  steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v3
+      if: ${{!fromJSON(inputs.download-all)}}
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: ${{ inputs.artifact-root }}/${{ inputs.artifact-name }}
+    - name: Download all artifacts
+      uses: actions/download-artifact@v3
+      if: ${{fromJSON(inputs.download-all)}}
+      with:
+        path: ${{ inputs.artifact-root }}
+
+    - name: Validate
+      shell: bash
+      id: validate
+      run: |
+        file="$(echo $root/*)"
+        echo "$file"
+        if [ ! -f "$file" ] ; then
+          echo "::error::file must be single file."
+          exit 1
+        fi
+        if ! jq . "$file" ; then
+          echo "::error::file must be json file."
+          exit 2
+        fi
+        echo "file=$file" >> $GITHUB_OUTPUT
+      env:
+        root: ${{ inputs.artifact-root }}/${{ inputs.artifact-name }}
+
+    - name: Set $COMPETITIVE_VERIFY_FILES_PATH
+      if: ${{fromJSON(inputs.set-env)}}
+      shell: bash
+      run: |
+        echo "COMPETITIVE_VERIFY_FILES_PATH=${{steps.validate.outputs.file}}" >> $GITHUB_ENV

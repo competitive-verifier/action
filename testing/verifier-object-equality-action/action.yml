@@ -1,0 +1,55 @@
+name: "Check object equality"
+description: "A composite action that check `competitive-verifier` object."
+author: "Kzrnm"
+branding:
+  color: blue
+  icon: code
+inputs:
+  class:
+    description: "Object class name."
+    required: true
+  file1:
+    description: "Compare json file."
+    required: true
+  file2:
+    description: "Compare json file."
+    required: true
+  not:
+    description: "If true, this action check object is not equal."
+    required: false
+    default: "false"
+runs:
+  using: composite
+  steps:
+    - name: check
+      shell: python
+      run: |
+        import os
+        from competitive_verifier.models import *
+
+        CLASS_NAME = os.getenv('CLASS_NAME')
+        FILE1 = os.getenv('FILE1')
+        FILE2 = os.getenv('FILE2')
+        NOT_EQUAL = os.getenv('NOT_EQUAL')
+
+        target_type = globals()[CLASS_NAME]
+        with open(FILE1, mode='r') as fp:
+            obj1 = target_type.parse_raw(fp.read())
+        with open(FILE2, mode='r') as fp:
+            obj2 = target_type.parse_raw(fp.read())
+
+        print("file1")
+        print(obj1.json())
+        print("\n")
+        print("file2")
+        print(obj2.json())
+        if NOT_EQUAL and NOT_EQUAL.lower() == "true":
+            assert obj1 != obj2
+        else:
+            assert obj1 == obj2
+
+      env:
+        CLASS_NAME: ${{ inputs.class }}
+        FILE1: ${{ inputs.file1 }}
+        FILE2: ${{ inputs.file2 }}
+        NOT_EQUAL: ${{ inputs.not }}

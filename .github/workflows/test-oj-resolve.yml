@@ -65,20 +65,20 @@ jobs:
           cat "${{steps.awk.outputs.json-path}}" | jq '.files."oj-resolve/examples/awk/circle.test.awk"' | grep "oj-resolve/examples/awk/circle.awk"
 
       - name: equal
-        uses: competitive-verifier/verifier-object-equality-action@v1
+        uses: ./testing/verifier-object-equality-action
         with:
           class: VerificationInput
           file1: ${{steps.include.outputs.json-path}}
           file2: ${{steps.exclude.outputs.json-path}}
       - name: Not equal
-        uses: competitive-verifier/verifier-object-equality-action@v1
+        uses: ./testing/verifier-object-equality-action
         with:
           class: VerificationInput
           file1: ${{steps.include.outputs.json-path}}
           file2: ${{steps.all.outputs.json-path}}
           not: true
       - name: Not equal awk
-        uses: competitive-verifier/verifier-object-equality-action@v1
+        uses: ./testing/verifier-object-equality-action
         with:
           class: VerificationInput
           file1: ${{steps.include.outputs.json-path}}

@@ -1,0 +1,105 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - verify/**
+      - actions/.github/workflows/test-verify.yml
+  pull_request:
+    paths:
+      - verify/**
+      - actions/.github/workflows/test-verify.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up competitive-verifier
+        uses: ./setup
+        with:
+          python-version: "3.9"
+
+      - name: Verify success
+        id: verify-success
+        uses: ./verify
+        with:
+          verify-files: verify/tests/success.json
+          timeout: 10
+          tle: 1
+          destination: ${{runner.temp}}/result.json
+          verbose: true
+
+      - name: Test success
+        run: |
+          [ $(wc -c < "$GITHUB_STEP_SUMMARY") = 0 ]
+          rm $GITHUB_STEP_SUMMARY
+          [ "${{ steps.verify-success.outputs.is-success }}"  = "true" ]
+          [ $(jq '.files|length' "$RUNNER_TEMP/result.json") = 4 ]
+
+      - name: Verify failure
+        id: verify-failure
+        uses: ./verify
+        with:
+          verify-files: verify/tests/failure.json
+          destination: ${{runner.temp}}/result.json
+
+      - name: Test failure
+        run: |
+          [ $(wc -c < "$GITHUB_STEP_SUMMARY") > 0 ]
+          rm $GITHUB_STEP_SUMMARY
+          [ "${{ steps.verify-failure.outputs.is-success }}"  = "false" ]
+          [ $(jq '.files|length' "$RUNNER_TEMP/result.json") = 1 ]
+
+      - name: Verify success split-0
+        id: verify-success-split-0
+        uses: ./verify
+        with:
+          verify-files: verify/tests/success.json
+          destination: ${{runner.temp}}/result.json
+          split-size: 2
+          split-index: 0
+      - name: Test split-0
+        run: |
+          [ $(wc -c < "$GITHUB_STEP_SUMMARY") = 0 ]
+          rm $GITHUB_STEP_SUMMARY
+          [ "${{ steps.verify-success-split-0.outputs.is-success }}"  = "true" ]
+          [ $(jq '.files|length' "$RUNNER_TEMP/result.json") = 2 ]
+
+      - name: Verify success split-1
+        id: verify-success-split-1
+        uses: ./verify
+        with:
+          verify-files: verify/tests/success.json
+          write-summary: true
+          destination: ${{runner.temp}}/result.json
+          split-size: 2
+          split-index: "01"
+      - name: Test split-1
+        run: |
+          [ $(wc -c < "$GITHUB_STEP_SUMMARY") > 0 ]
+          rm $GITHUB_STEP_SUMMARY
+          [ "${{ steps.verify-success-split-1.outputs.is-success }}"  = "true" ]
+          [ $(jq '.files|length' "$RUNNER_TEMP/result.json") = 2 ]
+
+      - name: Verify success split-over
+        id: verify-success-split-over
+        uses: ./verify
+        with:
+          verify-files: verify/tests/success.json
+          write-summary: true
+          destination: ${{runner.temp}}/result.json
+          split-size: 10
+          split-index: 4
+      - name: Test split-over
+        run: |
+          [ $(wc -c < "$GITHUB_STEP_SUMMARY") > 0 ]
+          rm $GITHUB_STEP_SUMMARY
+          [ "${{ steps.verify-success-split-over.outputs.is-success }}"  = "true" ]
+          [ $(jq '.files|length' "$RUNNER_TEMP/result.json") = 0 ]

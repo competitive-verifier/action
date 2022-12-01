@@ -1,0 +1,50 @@
+name: "Check competitive-verifier result"
+description: "A composite action that check result of competitive-verifier."
+author: "Kzrnm"
+branding:
+  color: blue
+  icon: check-circle
+inputs:
+  verify-result:
+    description: "The json files that are verify command result. You can use wildcard pattern."
+    required: true
+outputs:
+  result-count:
+    description: "Result count"
+    value: ${{ steps.result.outputs.size }}
+  result-count-success:
+    description: "Result count of success"
+    value: ${{ steps.result.outputs.success }}
+  result-count-failure:
+    description: "Result count of failure"
+    value: ${{ steps.result.outputs.failure }}
+  result-count-skipped:
+    description: "Result count of skipped"
+    value: ${{ steps.result.outputs.skipped }}
+runs:
+  using: composite
+  steps:
+    - name: Run check
+      shell: bash
+      id: check
+      run: |
+        competitive-verifier check $RESULT_FILES | tee "$RUNNER_TEMP/.temp.competitive-verifier.check.yml"
+      env:
+        RESULT_FILES: ${{ inputs.verify-result }}
+
+    - name: Result
+      shell: bash
+      id: result
+      if: success() || failure()
+      run: |
+        success=$(cat "$CHECK_YML" |grep success|sed -e 's/success: *//g')
+        echo "success=$success" >> $GITHUB_OUTPUT
+        failure=$(cat "$CHECK_YML" |grep failure|sed -e 's/failure: *//g')
+        echo "failure=$failure" >> $GITHUB_OUTPUT
+        skipped=$(cat "$CHECK_YML" |grep skipped|sed -e 's/skipped: *//g')
+        echo "skipped=$skipped" >> $GITHUB_OUTPUT
+
+        size=$(( $success + $failure + $skipped ))
+        echo "size=$size" >> $GITHUB_OUTPUT
+      env:
+        CHECK_YML: ${{runner.temp}}/.temp.competitive-verifier.check.yml

@@ -1,0 +1,56 @@
+{
+    "$schema": "https://raw.githubusercontent.com/competitive-verifier/competitive-verifier/main/schema/verify_files.schema.json",
+    "files": {
+        "examples/hello.sh": {
+            "verification": {
+                "type": "problem",
+                "command": "bash examples/hello.sh",
+                "problem": "https://onlinejudge.u-aizu.ac.jp/courses/lesson/2/ITP1/1/ITP1_1_A"
+            }
+        },
+        "examples/awk/circle.test.awk": {
+            "dependencies": [
+                "examples/awk/circle.awk"
+            ],
+            "verification": {
+                "type": "problem",
+                "command": "awk -f examples/awk/circle.test.awk",
+                "problem": "http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ITP1_4_B",
+                "error": 0.00001,
+                "tle": 1
+            }
+        },
+        "examples/awk/circle.awk": {},
+        "examples/awk/aplusb.awk": {
+            "document_attributes": {
+                "document_title": "Calculate \"A + B\""
+            },
+            "dependencies": [],
+            "verification": {
+                "type": "problem",
+                "command": "awk -f examples/awk/aplusb.awk",
+                "problem": "https://judge.yosupo.jp/problem/aplusb"
+            }
+        },
+        "examples/awk/dummy.awk": {
+            "dependencies": [],
+            "verification": {
+                "type": "const",
+                "status": "success"
+            }
+        },
+        "examples/hello2.sh": {
+            "verification": [
+                {
+                    "type": "problem",
+                    "command": "bash examples/hello.sh",
+                    "problem": "https://onlinejudge.u-aizu.ac.jp/courses/lesson/2/ITP1/1/ITP1_1_A"
+                },
+                {
+                    "type": "command",
+                    "command": "true"
+                }
+            ]
+        }
+    }
+}

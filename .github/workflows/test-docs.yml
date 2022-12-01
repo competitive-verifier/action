@@ -1,0 +1,74 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up competitive-verifier
+        uses: ./setup
+        with:
+          python-version: "3.9"
+
+      - name: No verify-files
+        id: no-verify-files
+        uses: ./docs
+        continue-on-error: true
+        with:
+          verify-result: docs/tests/pyres*/competitive-verifier-result.json
+          destination: ${{runner.temp}}/.competitive-verifier/jekyll-summary-false
+      - name: Test no-verify-files
+        run: |
+          test "${{steps.no-verify-files.outcome}}" == "failure"
+
+      - name: Create docs summary-false
+        id: docs-summary-false
+        uses: ./docs
+        with:
+          verify-files: docs/tests/verify-files.json
+          verify-result: docs/tests/pyres*/competitive-verifier-result.json
+          destination: ${{runner.temp}}/.competitive-verifier/jekyll-summary-false
+          write-summary: false
+      - name: Test summary-false
+        run: |
+          [ $(wc -c < "$GITHUB_STEP_SUMMARY") = 0 ]
+          rm $GITHUB_STEP_SUMMARY
+          ls ${RUNNER_TEMP}/.competitive-verifier/jekyll-summary-false
+
+      - name: Create docs no-summary
+        id: docs-no-summary
+        uses: ./docs
+        with:
+          verify-result: docs/tests/pyres*/competitive-verifier-result.json
+          destination: ${{runner.temp}}/.competitive-verifier/jekyll-no-summary
+          write-summary: false
+        env:
+          COMPETITIVE_VERIFY_FILES_PATH: docs/tests/verify-files.json
+      - name: Test no-summary
+        run: |
+          [ $(wc -c < "$GITHUB_STEP_SUMMARY") = 0 ]
+          rm $GITHUB_STEP_SUMMARY
+          ls ${RUNNER_TEMP}/.competitive-verifier/jekyll-no-summary
+
+      - name: Create docs summary
+        id: docs-summary
+        uses: ./docs
+        with:
+          verify-files: docs/tests/verify-files.json
+          verify-result: docs/tests/pyres*/competitive-verifier-result.json
+          destination: ${{runner.temp}}/.competitive-verifier/jekyll-summary
+          write-summary: true
+      - name: Test summary
+        run: |
+          [ $(wc -c < "$GITHUB_STEP_SUMMARY") > 0 ]
+          rm $GITHUB_STEP_SUMMARY
+          ls ${RUNNER_TEMP}/.competitive-verifier/jekyll-summary

@@ -1,0 +1,85 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - download-verify-artifact/**
+      - actions/.github/workflows/test-download-verify-artifact.yml
+  pull_request:
+    paths:
+      - download-verify-artifact/**
+      - actions/.github/workflows/test-download-verify-artifact.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Upload not json
+        uses: actions/upload-artifact@v3
+        with:
+          name: not_json
+          path: download-verify-artifact/tests/not_json.txt
+      - name: Upload multiple file
+        uses: actions/upload-artifact@v3
+        with:
+          name: multiple
+          path: download-verify-artifact/tests/*.json
+      - name: Upload file
+        uses: actions/upload-artifact@v3
+        with:
+          name: file
+          path: download-verify-artifact/tests/verify_files.json
+
+      - name: Download multiple
+        id: multiple
+        uses: ./download-verify-artifact
+        continue-on-error: true
+        with:
+          artifact-name: multiple
+      - name: Download not json
+        id: not-json
+        uses: ./download-verify-artifact
+        continue-on-error: true
+        with:
+          artifact-name: not_json
+      - name: Download not json
+        id: file
+        uses: ./download-verify-artifact
+        with:
+          artifact-name: file
+          set-env: false
+
+      - name: Test outcome
+        run: |
+          test "${{steps.multiple.outcome}}" = 'failure'
+          test "${{steps.not-json.outcome}}" = 'failure'
+          test "${{steps.file.outcome}}" = 'success'
+
+      - name: Test output
+        run: |
+          ls .verifier.artifacts/file/verify_files.json
+          test "${{steps.file.outputs.artifacts-root}}" = './.verifier.artifacts'
+          test "${{steps.file.outputs.json-path}}" = './.verifier.artifacts/file/verify_files.json'
+          test "$COMPETITIVE_VERIFY_FILES_PATH" != './.verifier.artifacts/file/verify_files.json'
+
+      - name: Download all
+        id: all
+        uses: ./download-verify-artifact
+        with:
+          artifact-name: file
+          artifact-root: all_artifacts
+          download-all: true
+
+      - name: Test output all
+        run: |
+          ls all_artifacts/{multiple,not_json,file}/
+          test "${{steps.all.outputs.artifacts-root}}" = 'all_artifacts'
+          test "${{steps.all.outputs.json-path}}" = 'all_artifacts/file/verify_files.json'
+          test "$COMPETITIVE_VERIFY_FILES_PATH" = 'all_artifacts/file/verify_files.json'

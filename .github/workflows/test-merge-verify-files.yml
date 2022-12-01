@@ -44,14 +44,14 @@ jobs:
           output-path: merged-list.json
 
       - name: Check glob
-        uses: competitive-verifier/verifier-object-equality-action@v1
+        uses: ./testing/verifier-object-equality-action
         with:
           class: VerificationInput
           file1: ${{steps.glob.outputs.json-path}}
           file2: merge-verify-files/tests/merged.json
 
       - name: Check list
-        uses: competitive-verifier/verifier-object-equality-action@v1
+        uses: ./testing/verifier-object-equality-action
         with:
           class: VerificationInput
           file1: ${{steps.list.outputs.json-path}}

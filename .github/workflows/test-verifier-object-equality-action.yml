@@ -1,0 +1,70 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - testing/verifier-object-equality-action/**
+      - actions/.github/workflows/test-verifier-object-equality-action.yml
+  pull_request:
+    paths:
+      - testing/verifier-object-equality-action/**
+      - actions/.github/workflows/test-verifier-object-equality-action.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up competitive-verifier
+        uses: ./setup
+        with:
+          python-version: "3.9"
+          cache-pip: true
+
+      - name: equal
+        id: equal
+        uses: ./testing/verifier-object-equality-action
+        with:
+          class: VerificationInput
+          file1: testing/verifier-object-equality-action/tests/file1.json
+          file2: testing/verifier-object-equality-action/tests/file1.json
+      - name: equal-difference
+        id: equal-difference
+        uses: ./testing/verifier-object-equality-action
+        continue-on-error: true
+        with:
+          class: VerificationInput
+          file1: testing/verifier-object-equality-action/tests/file1.json
+          file2: testing/verifier-object-equality-action/tests/file2.json
+
+      - name: not-equal
+        id: not-equal
+        uses: ./testing/verifier-object-equality-action
+        continue-on-error: true
+        with:
+          class: VerificationInput
+          file1: testing/verifier-object-equality-action/tests/file1.json
+          file2: testing/verifier-object-equality-action/tests/file1.json
+          not: true
+      - name: not-equal-difference
+        id: not-equal-difference
+        uses: ./testing/verifier-object-equality-action
+        with:
+          class: VerificationInput
+          file1: testing/verifier-object-equality-action/tests/file1.json
+          file2: testing/verifier-object-equality-action/tests/file2.json
+          not: true
+
+      - name: Check outcome
+        run: |
+          test "${{steps.equal.outcome}}" = "success"
+          test "${{steps.equal-difference.outcome}}" = "failure"
+
+          test "${{steps.not-equal.outcome}}" = "failure"
+          test "${{steps.not-equal-difference.outcome}}" = "success"

@@ -1,0 +1,43 @@
+name: Download problems
+description: "A composite action that competitive-verifier download"
+author: "Kzrnm"
+branding:
+  color: blue
+  icon: download
+inputs:
+  verify-files:
+    description: "The file path of verify files json. default: $COMPETITIVE_VERIFY_FILES_PATH environment variable."
+    required: false
+    default: ""
+outputs:
+  problems:
+    description: "Problem urls"
+    value: ${{ steps.list-problems.outputs.problems }}
+  problems-hash:
+    description: "MD5 hash of all problem urls"
+    value: ${{ steps.list-problems.outputs.md5 }}
+
+runs:
+  using: composite
+  steps:
+    - name: List problems
+      id: list-problems
+      shell: bash
+      run: |
+        problems=$(jq -r '.files|map(.verification|if type=="array" then . else [.] end | .[].problem|select(. != null))|sort|unique[]' "$COMPETITIVE_VERIFY_FILES_PATH")
+        md5=$(echo "$problems" | md5sum | cut -c 1-32)
+        echo "$problems"
+        echo "$md5"
+
+        echo "problems<<$md5" >> $GITHUB_OUTPUT
+        echo "$problems" >> $GITHUB_OUTPUT
+        echo "$md5" >> $GITHUB_OUTPUT
+
+        echo "md5=$md5" >> $GITHUB_OUTPUT
+      env:
+        COMPETITIVE_VERIFY_FILES_PATH: ${{ inputs.verify-files || env.COMPETITIVE_VERIFY_FILES_PATH }}
+    - name: Run download
+      shell: bash
+      run: competitive-verifier download
+      env:
+        COMPETITIVE_VERIFY_FILES_PATH: ${{ inputs.verify-files || env.COMPETITIVE_VERIFY_FILES_PATH }}

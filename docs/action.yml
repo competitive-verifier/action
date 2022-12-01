@@ -1,0 +1,36 @@
+name: "competitive-verifier docs"
+description: "A composite action that competitive-verifier docs"
+author: "Kzrnm"
+branding:
+  color: blue
+  icon: file-text
+inputs:
+  verify-files:
+    description: "The file path of verify files json. default: $COMPETITIVE_VERIFY_FILES_PATH environment variable."
+    required: false
+    default: ""
+  verify-result:
+    description: "The json files that are verify command result. You can use wildcard pattern."
+    required: true
+  destination:
+    description: "Argument of docs --destination."
+    required: true
+  write-summary:
+    description: If true, show GitHub Actions Summary
+    required: false
+    default: "true"
+runs:
+  using: composite
+  steps:
+    - name: Run docs
+      shell: bash
+      id: docs
+      run: |
+        RESULT_FILES="$(echo $RESULT_FILES)"
+        competitive-verifier docs \
+          $RESULT_FILES \
+          ${{ fromJson(inputs.write-summary) && '--write-summary' || '' }} \
+          --destination "${{ inputs.destination }}"
+      env:
+        COMPETITIVE_VERIFY_FILES_PATH: ${{ inputs.verify-files || env.COMPETITIVE_VERIFY_FILES_PATH }}
+        RESULT_FILES: ${{ inputs.verify-result }}

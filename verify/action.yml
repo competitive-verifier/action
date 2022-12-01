@@ -1,0 +1,72 @@
+name: "competitive-verifier verify"
+description: "A composite action that competitive-verifier verify"
+author: "Kzrnm"
+branding:
+  color: blue
+  icon: zap
+inputs:
+  verify-files:
+    description: "The file path of verify files json. default: $COMPETITIVE_VERIFY_FILES_PATH environment variable."
+    required: false
+    default: ""
+  write-summary:
+    description: If true, show GitHub Actions Summary
+    required: false
+    default: "false"
+  timeout:
+    description: Timeout seconds
+    required: false
+    default: ""
+  tle:
+    description: TLE threshold seconds
+    required: false
+    default: ""
+  prev-result:
+    description: Previous result json file
+    required: false
+    default: ""
+  destination:
+    description: Output file path. If destination is empty, this action doesn't write result file.
+    required: false
+    default: ""
+  split-size:
+    description: "Size of split. Argument of oj-resolve --split."
+    required: false
+    default: ""
+  split-index:
+    description: "Argument of oj-resolve --split-index."
+    required: false
+    default: ""
+
+  verbose:
+    description: If true, debug log is enabled.
+    required: false
+    default: "false"
+outputs:
+  is-success:
+    description: "Result boolean of `competitive-verifier verify`."
+    value: ${{ steps.verify.outputs.success }}
+
+runs:
+  using: composite
+  steps:
+    - name: Run verify
+      shell: bash
+      id: verify
+      run: |
+        if competitive-verifier \
+          ${{ fromJson(inputs.verbose) && '--verbose' || '' }} \
+          verify --check-error \
+          ${{ (inputs.timeout != '')         && '--timeout'       || '' }} ${{inputs.timeout}} \
+          ${{ (inputs.tle != '')             && '--tle'           || '' }} ${{inputs.tle}} \
+          ${{ (inputs.prev-result != '')     && '--prev-result'   || '' }} ${{inputs.prev-result}} \
+          ${{ (inputs.split-size != '')      && '--split'         || '' }} ${{inputs.split-size}} \
+          ${{ (inputs.split-index != '')     && '--split-index'   || '' }} ${{inputs.split-index}} \
+          ${{ fromJson(inputs.write-summary) && '--write-summary' || '' }} \
+          ${{ (inputs.destination != '')   && '--output'        || '' }} "${{inputs.destination}}" ; then
+          echo "success=true" >> $GITHUB_OUTPUT
+        else
+          echo "success=false" >> $GITHUB_OUTPUT
+        fi
+      env:
+        COMPETITIVE_VERIFY_FILES_PATH: ${{ inputs.verify-files || env.COMPETITIVE_VERIFY_FILES_PATH }}
