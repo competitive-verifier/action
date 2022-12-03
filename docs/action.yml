@@ -12,6 +12,9 @@ inputs:
   verify-result:
     description: "The json files that are verify command result. You can use wildcard pattern."
     required: true
+  docs:
+    description: "Argument of docs --docs."
+    required: false
   destination:
     description: "Argument of docs --destination."
     required: true
@@ -30,6 +33,7 @@ runs:
         competitive-verifier docs \
           $RESULT_FILES \
           ${{ fromJson(inputs.write-summary) && '--write-summary' || '' }} \
+          ${{ fromJson(inputs.docs) && '--docs' || '' }} "${{ inputs.docs }}" \
           --destination "${{ inputs.destination }}"
       env:
         COMPETITIVE_VERIFY_FILES_PATH: ${{ inputs.verify-files || env.COMPETITIVE_VERIFY_FILES_PATH }}

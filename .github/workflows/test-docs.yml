@@ -78,3 +78,13 @@ jobs:
           [ $(wc -c < "$GITHUB_STEP_SUMMARY") > 0 ]
           rm $GITHUB_STEP_SUMMARY
           ls ${RUNNER_TEMP}/.competitive-verifier/jekyll-summary
+
+      - name: Create docs explicit config
+        uses: ./docs
+        with:
+          verify-files: docs/tests/verify-files.json
+          verify-result: docs/tests/pyres*/competitive-verifier-result.json
+          destination: ${{runner.temp}}/.competitive-verifier/jekyll-summary
+          docs: docs/tests/config/
+      - name: Test docs config
+        run: test "$(yq -r .description $RUNNER_TEMP/.competitive-verifier/jekyll-summary/_config.yml)" = "Test description"
