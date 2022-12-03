@@ -37,5 +37,5 @@ runs:
       env:
         include: ${{ inputs.include }}
         exclude: ${{ inputs.exclude }}
-        config: ${{ (inputs.config != '') && '--config' || '' }} ${{inputs.config}}
+        config: ${{ format(inputs.config && '--config {0}', inputs.config) }}
         OUTPUT_FILE: ${{ inputs.output-path }}

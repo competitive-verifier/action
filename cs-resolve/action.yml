@@ -46,9 +46,9 @@ runs:
         competitive-verifier-cs-resolver ${{inputs.solution}} $unittest $problems $include $exclude $msbuild_props | tee "$OUTPUT_FILE"
         echo "json-path=$OUTPUT_FILE" >> $GITHUB_OUTPUT
       env:
-        include: ${{ (inputs.include != '') && '--include' || '' }} ${{inputs.include}}
-        exclude: ${{ (inputs.exclude != '') && '--exclude' || '' }} ${{inputs.exclude}}
-        unittest: ${{ (inputs.unittest-result != '') && '--unittest' || '' }} ${{inputs.unittest-result}}
-        problems: ${{ (inputs.problems != '') && '--problems' || '' }} ${{inputs.problems}}
-        msbuild_props: ${{ (inputs.msbuild-properties != '') && '--properties' || '' }} ${{inputs.msbuild-properties}}
+        include: ${{ format(inputs.include && '--include {0}', inputs.include) }}
+        exclude: ${{ format(inputs.exclude && '--exclude {0}', inputs.exclude) }}
+        unittest: ${{ format(inputs.unittest-result && '--unittest {0}', inputs.unittest-result) }}
+        problems: ${{ format(inputs.problems && '--problems {0}', inputs.problems) }}
+        msbuild_props: ${{ format(inputs.msbuild-properties && '--properties {0}', inputs.msbuild-properties) }}
         OUTPUT_FILE: ${{ inputs.output-path }}

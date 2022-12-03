@@ -57,11 +57,11 @@ runs:
         if competitive-verifier \
           ${{ fromJson(inputs.verbose) && '--verbose' || '' }} \
           verify --check-error \
-          ${{ (inputs.timeout != '')         && '--timeout'       || '' }} ${{inputs.timeout}} \
-          ${{ (inputs.tle != '')             && '--tle'           || '' }} ${{inputs.tle}} \
-          ${{ (inputs.prev-result != '')     && '--prev-result'   || '' }} ${{inputs.prev-result}} \
-          ${{ (inputs.split-size != '')      && '--split'         || '' }} ${{inputs.split-size}} \
-          ${{ (inputs.split-index != '')     && '--split-index'   || '' }} ${{inputs.split-index}} \
+          ${{ format(inputs.timeout && '--timeout {0}', inputs.timeout) }} \
+          ${{ format(inputs.tle && '--tle {0}', inputs.tle) }} \
+          ${{ format(inputs.prev-result && '--prev-result {0}', inputs.prev-result) }} \
+          ${{ format(inputs.split-size && '--split {0}', inputs.split-size) }} \
+          ${{ format(inputs.split-index && '--split-index {0}', inputs.split-index) }} \
           ${{ fromJson(inputs.write-summary) && '--write-summary' || '' }} \
           ${{ (inputs.destination != '')   && '--output'        || '' }} "${{inputs.destination}}" ; then
           echo "success=true" >> $GITHUB_OUTPUT
