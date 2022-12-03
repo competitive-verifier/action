@@ -57,6 +57,42 @@ jobs:
           [ "${{ steps.verify-failure.outputs.is-success }}"  = "false" ]
           [ $(jq '.files|length' "$RUNNER_TEMP/result.json") = 1 ]
 
+      - name: Verify success check
+        id: verify-success-check
+        uses: ./verify
+        with:
+          verify-files: verify/tests/success.json
+          timeout: 10
+          tle: 1
+          destination: ${{runner.temp}}/result.json
+          check: true
+          verbose: true
+
+      - name: Test success check
+        run: |
+          [ $(wc -c < "$GITHUB_STEP_SUMMARY") = 0 ]
+          rm $GITHUB_STEP_SUMMARY
+          [ "${{ steps.verify-success-check.outputs.is-success }}"  = "true" ]
+          [ "${{ steps.verify-success-check.outcome }}" = "success" ]
+          [ $(jq '.files|length' "$RUNNER_TEMP/result.json") = 4 ]
+
+      - name: Verify failure check
+        id: verify-failure-check
+        uses: ./verify
+        continue-on-error: true
+        with:
+          verify-files: verify/tests/failure.json
+          destination: ${{runner.temp}}/result.json
+          check: true
+
+      - name: Test failure check
+        run: |
+          [ $(wc -c < "$GITHUB_STEP_SUMMARY") > 0 ]
+          rm $GITHUB_STEP_SUMMARY
+          [ "${{ steps.verify-failure-check.outputs.is-success }}"  = "false" ]
+          [ "${{ steps.verify-failure-check.outcome }}" = "failure" ]
+          [ $(jq '.files|length' "$RUNNER_TEMP/result.json") = 1 ]
+
       - name: Verify success split-0
         id: verify-success-split-0
         uses: ./verify

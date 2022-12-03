@@ -4,8 +4,8 @@
         "dummy1.txt": {
             "dependencies": [],
             "verification": {
-                "type": "command",
-                "command": "false"
+                "type": "const",
+                "status": "failure"
             }
         }
     }

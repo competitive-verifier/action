@@ -30,14 +30,17 @@ inputs:
     required: false
     default: ""
   split-size:
-    description: "Size of split. Argument of oj-resolve --split."
+    description: "Size of split. Argument of verify --split."
     required: false
     default: ""
   split-index:
-    description: "Argument of oj-resolve --split-index."
+    description: "Argument of verify --split-index."
     required: false
     default: ""
-
+  check:
+    description: "If check is true and `verify` fails, the action fails too."
+    required: false
+    default: "false"
   verbose:
     description: If true, debug log is enabled.
     required: false
@@ -67,6 +70,7 @@ runs:
           echo "success=true" >> $GITHUB_OUTPUT
         else
           echo "success=false" >> $GITHUB_OUTPUT
+          ${{ fromJson(inputs.check) && 'exit 1' || '' }}
         fi
       env:
         COMPETITIVE_VERIFY_FILES_PATH: ${{ inputs.verify-files || env.COMPETITIVE_VERIFY_FILES_PATH }}
