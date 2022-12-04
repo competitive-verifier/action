@@ -36,18 +36,12 @@ jobs:
 
       - name: setup CompetitiveVerifierCsResolver
         run: dotnet tool install -g CompetitiveVerifierCsResolver
+      - name: C# build
+        run: dotnet build cs-resolve/tests/tests.sln -c Release
       - name: C# test
-        run: |
-          dotnet build cs-resolve/tests/tests.sln -c Release
-
-          dotnet test cs-resolve/tests/Test.MSTest/Test.MSTest.csproj --logger  "CompetitiveVerifier;OutFile=${{runner.temp}}/unittest.MSTest.csv" --no-build  -c Release
-          dotnet test cs-resolve/tests/Test.NUnit/Test.NUnit.csproj --logger  "CompetitiveVerifier;OutFile=${{runner.temp}}/unittest.NUnit.csv" --no-build  -c Release
-          dotnet test cs-resolve/tests/Test.XUnit/Test.XUnit.csproj --logger  "CompetitiveVerifier;OutFile=${{runner.temp}}/unittest.XUnit.csv" --no-build  -c Release
-          dotnet test cs-resolve/tests/UnitTest/UnitTest.csproj --logger  "CompetitiveVerifier;OutFile=${{runner.temp}}/unittest.UnitTest.csv" --no-build  -c Release
-
-          cat ${{runner.temp}}/unittest.*.csv > ${{runner.temp}}/unittest.csv
-
-          dotnet run --project cs-resolve/tests/VerifyApp/VerifyApp.csproj --no-build -c Release > ${{runner.temp}}/problems.json
+        run: dotnet test cs-resolve/tests/tests.sln --logger  "CompetitiveVerifier;OutDirectory=${{runner.temp}}/VerifierUnitTestCs" --no-build  -c Release
+      - name: C# verifications
+        run: dotnet run --project cs-resolve/tests/VerifyApp/VerifyApp.csproj --no-build -c Release | tee ${{runner.temp}}/problems.json
 
       - name: cs-resolve
         id: resolve
@@ -55,8 +49,9 @@ jobs:
         with:
           solution: cs-resolve/tests/tests.sln
           include: cs-resolve/tests
+          exclude: "**/Usings.cs **/obj/** **/bin/**"
           output-path: ./verify-files.json
-          unittest-result: ${{runner.temp}}/unittest.csv
+          unittest-result: ${{runner.temp}}/VerifierUnitTestCs/*.csv
           problems: ${{runner.temp}}/problems.json
 
       - name: Check path

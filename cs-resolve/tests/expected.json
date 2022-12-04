@@ -1,93 +1,27 @@
 {
     "files": {
-        "cs-resolve/tests/UnitTest/Usings.cs": {
-            "dependencies": [],
-            "document_attributes": {},
-            "verification": []
-        },
-        "cs-resolve/tests/ClassLibrary/Circle.record.cs": {
-            "dependencies": [],
-            "document_attributes": {},
-            "verification": []
-        },
-        "cs-resolve/tests/Test.NUnit/CircleTest.cs": {
-            "dependencies": [
-                "cs-resolve/tests/Test.NUnit/CircleTest.cs",
-                "cs-resolve/tests/ClassLibrary/Circle.class.cs"
-            ],
-            "document_attributes": {},
-            "verification": [
-                {
-                    "status": "success",
-                    "type": "const"
-                },
-                {
-                    "status": "success",
-                    "type": "const"
-                },
-                {
-                    "status": "success",
-                    "type": "const"
-                },
-                {
-                    "status": "success",
-                    "type": "const"
-                }
-            ]
-        },
         "cs-resolve/tests/UnitTest/CircleTest.cs": {
             "dependencies": [
                 "cs-resolve/tests/ClassLibrary/Circle.class.cs"
             ],
-            "document_attributes": {},
             "verification": [
                 {
-                    "status": "success",
-                    "type": "const"
+                    "type": "const",
+                    "status": "success"
                 },
                 {
-                    "status": "success",
-                    "type": "const"
+                    "type": "const",
+                    "status": "success"
                 },
                 {
-                    "status": "success",
-                    "type": "const"
+                    "type": "const",
+                    "status": "success"
                 },
                 {
-                    "status": "success",
-                    "type": "const"
+                    "type": "const",
+                    "status": "success"
                 }
             ]
-        },
-        "cs-resolve/tests/Test.MSTest/CircleTest.cs": {
-            "dependencies": [
-                "cs-resolve/tests/Test.MSTest/CircleTest.cs",
-                "cs-resolve/tests/ClassLibrary/Circle.class.cs"
-            ],
-            "document_attributes": {},
-            "verification": [
-                {
-                    "status": "success",
-                    "type": "const"
-                },
-                {
-                    "status": "success",
-                    "type": "const"
-                },
-                {
-                    "status": "success",
-                    "type": "const"
-                },
-                {
-                    "status": "success",
-                    "type": "const"
-                }
-            ]
-        },
-        "cs-resolve/tests/Test.NUnit/Usings.cs": {
-            "dependencies": [],
-            "document_attributes": {},
-            "verification": []
         },
         "cs-resolve/tests/Test.XUnit/CircleTest.cs": {
             "dependencies": [
@@ -95,57 +29,38 @@
                 "cs-resolve/tests/Test.XUnit/CircleTest.cs",
                 "cs-resolve/tests/ClassLibrary/Circle.class.cs"
             ],
-            "document_attributes": {},
             "verification": [
                 {
-                    "status": "success",
-                    "type": "const"
+                    "type": "const",
+                    "status": "success"
                 },
                 {
-                    "status": "success",
-                    "type": "const"
+                    "type": "const",
+                    "status": "success"
                 },
                 {
-                    "status": "success",
-                    "type": "const"
+                    "type": "const",
+                    "status": "success"
                 },
                 {
-                    "status": "success",
-                    "type": "const"
+                    "type": "const",
+                    "status": "success"
                 },
                 {
-                    "status": "success",
-                    "type": "const"
+                    "type": "const",
+                    "status": "success"
                 },
                 {
-                    "status": "success",
-                    "type": "const"
+                    "type": "const",
+                    "status": "success"
                 },
                 {
-                    "status": "success",
-                    "type": "const"
+                    "type": "const",
+                    "status": "success"
                 },
                 {
-                    "status": "success",
-                    "type": "const"
-                }
-            ]
-        },
-        "cs-resolve/tests/Test.XUnit/Usings.cs": {
-            "dependencies": [],
-            "document_attributes": {},
-            "verification": []
-        },
-        "cs-resolve/tests/VerifyApp/HelloWorldAoj.cs": {
-            "dependencies": [
-                "cs-resolve/tests/ClassLibrary/HelloWorld.cs"
-            ],
-            "document_attributes": {},
-            "verification": [
-                {
-                    "problem": "https://onlinejudge.u-aizu.ac.jp/courses/lesson/2/ITP1/1/ITP1_1_A",
-                    "command": "dotnet {{{PWD}}}/cs-resolve/tests/VerifyApp/bin/Release/net6.0/VerifyApp.dll VerifyApp.HelloWorldAoj",
-                    "type": "problem"
+                    "type": "const",
+                    "status": "success"
                 }
             ]
         },
@@ -153,21 +68,12 @@
             "dependencies": [
                 "cs-resolve/tests/ClassLibrary/Circle.class.cs"
             ],
-            "document_attributes": {},
-            "verification": []
-        },
-        "cs-resolve/tests/ClassLibrary/HelloWorld.cs": {
-            "dependencies": [],
-            "document_attributes": {
-                "document_title": "Hello World!"
-            },
             "verification": []
         },
         "cs-resolve/tests/VerifyApp/CircleAizu.cs": {
             "dependencies": [
                 "cs-resolve/tests/ClassLibrary/Circle.class.cs"
             ],
-            "document_attributes": {},
             "verification": [
                 {
                     "problem": "http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ITP1_4_B",
@@ -177,9 +83,77 @@
                 }
             ]
         },
-        "cs-resolve/tests/Test.MSTest/Usings.cs": {
+        "cs-resolve/tests/VerifyApp/HelloWorldAoj.cs": {
+            "dependencies": [
+                "cs-resolve/tests/ClassLibrary/HelloWorld.cs"
+            ],
+            "verification": [
+                {
+                    "problem": "https://onlinejudge.u-aizu.ac.jp/courses/lesson/2/ITP1/1/ITP1_1_A",
+                    "command": "dotnet {{{PWD}}}/cs-resolve/tests/VerifyApp/bin/Release/net6.0/VerifyApp.dll VerifyApp.HelloWorldAoj",
+                    "type": "problem"
+                }
+            ]
+        },
+        "cs-resolve/tests/ClassLibrary/HelloWorld.cs": {
             "dependencies": [],
-            "document_attributes": {},
+            "document_attributes": {
+                "document_title": "Hello World!"
+            },
+            "verification": []
+        },
+        "cs-resolve/tests/Test.NUnit/CircleTest.cs": {
+            "dependencies": [
+                "cs-resolve/tests/Test.NUnit/CircleTest.cs",
+                "cs-resolve/tests/ClassLibrary/Circle.class.cs"
+            ],
+            "verification": [
+                {
+                    "type": "const",
+                    "status": "success"
+                },
+                {
+                    "type": "const",
+                    "status": "success"
+                },
+                {
+                    "type": "const",
+                    "status": "success"
+                },
+                {
+                    "type": "const",
+                    "status": "success"
+                }
+            ]
+        },
+        "cs-resolve/tests/Test.MSTest/CircleTest.cs": {
+            "dependencies": [
+                "cs-resolve/tests/ClassLibrary/Circle.class.cs",
+                "cs-resolve/tests/Test.MSTest/CircleTest.cs"
+            ],
+            "additonal_sources": [],
+            "verification": [
+                {
+                    "type": "const",
+                    "status": "success"
+                },
+                {
+                    "type": "const",
+                    "status": "success"
+                },
+                {
+                    "type": "const",
+                    "status": "success"
+                },
+                {
+                    "type": "const",
+                    "status": "success"
+                }
+            ]
+        },
+        "cs-resolve/tests/ClassLibrary/Circle.record.cs": {
+            "dependencies": [],
+            "additonal_sources": [],
             "verification": []
         }
     }
