@@ -37,7 +37,7 @@ jobs:
         id: python310
         with:
           python-version: "3.10"
-          ref: eeb93b5c71fb1caac9a439c936c13a384387db84
+          package: git+https://github.com/competitive-verifier/competitive-verifier.git@eeb93b5c71fb1caac9a439c936c13a384387db84
       - name: Test 3.10
         run: |
           [ ${{ steps.python310.outputs.version }} = "0.0.1" ]

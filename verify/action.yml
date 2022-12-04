@@ -58,15 +58,15 @@ runs:
       id: verify
       run: |
         if competitive-verifier \
-          ${{ fromJson(inputs.verbose) && '--verbose' || '' }} \
-          verify --check-error \
-          ${{ format(inputs.timeout && '--timeout {0}', inputs.timeout) }} \
-          ${{ format(inputs.tle && '--tle {0}', inputs.tle) }} \
-          ${{ format(inputs.prev-result && '--prev-result {0}', inputs.prev-result) }} \
-          ${{ format(inputs.split-size && '--split {0}', inputs.split-size) }} \
-          ${{ format(inputs.split-index && '--split-index {0}', inputs.split-index) }} \
+          ${{ fromJson(inputs.verbose)       && '--verbose'       || '' }} \
           ${{ fromJson(inputs.write-summary) && '--write-summary' || '' }} \
-          ${{ (inputs.destination != '')   && '--output'        || '' }} "${{inputs.destination}}" ; then
+          verify --check-error \
+          ${{ format(inputs.timeout     && '--timeout {0}',     inputs.timeout) }} \
+          ${{ format(inputs.tle         && '--tle {0}',         inputs.tle) }} \
+          ${{ format(inputs.prev-result && '--prev-result {0}', inputs.prev-result) }} \
+          ${{ format(inputs.split-size  && '--split {0}',       inputs.split-size) }} \
+          ${{ format(inputs.split-index && '--split-index {0}', inputs.split-index) }} \
+          ${{ format(inputs.destination && '--output "{0}"',    inputs.destination) }} ; then
           echo "success=true" >> $GITHUB_OUTPUT
         else
           echo "success=false" >> $GITHUB_OUTPUT

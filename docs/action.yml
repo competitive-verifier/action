@@ -29,12 +29,12 @@ runs:
       shell: bash
       id: docs
       run: |
-        RESULT_FILES="$(echo $RESULT_FILES)"
+        COMPETITIVE_RESULT_FILES="$(echo $COMPETITIVE_RESULT_FILES)"
         competitive-verifier docs \
-          $RESULT_FILES \
+          $COMPETITIVE_RESULT_FILES \
           ${{ fromJson(inputs.write-summary) && '--write-summary' || '' }} \
           ${{ format(inputs.docs && '--docs {0}', inputs.docs) }} \
           --destination "${{ inputs.destination }}"
       env:
         COMPETITIVE_VERIFY_FILES_PATH: ${{ inputs.verify-files || env.COMPETITIVE_VERIFY_FILES_PATH }}
-        RESULT_FILES: ${{ inputs.verify-result }}
+        COMPETITIVE_RESULT_FILES: ${{ inputs.verify-result }}

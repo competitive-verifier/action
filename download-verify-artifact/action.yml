@@ -47,7 +47,7 @@ runs:
       shell: bash
       id: validate
       run: |
-        file="$(echo $root/*)"
+        file="$(echo $COMPETITIVE_root/*)"
         echo "$file"
         if [ ! -f "$file" ] ; then
           echo "::error::file must be single file."
@@ -59,7 +59,7 @@ runs:
         fi
         echo "file=$file" >> $GITHUB_OUTPUT
       env:
-        root: ${{ inputs.artifact-root }}/${{ inputs.artifact-name }}
+        COMPETITIVE_root: ${{ inputs.artifact-root }}/${{ inputs.artifact-name }}
 
     - name: Set $COMPETITIVE_VERIFY_FILES_PATH
       if: ${{fromJSON(inputs.set-env)}}

@@ -5,14 +5,10 @@ branding:
   color: blue
   icon: play-circle
 inputs:
-  repository:
-    description: Specify competitive-verifier repository
+  package:
+    description: Specify competitive-verifier package path
     required: false
-    default: "https://github.com/competitive-verifier/competitive-verifier.git"
-  ref:
-    description: Specify branch, tag or commit of competitive-verifier
-    required: false
-    default: "main"
+    default: "git+https://github.com/competitive-verifier/competitive-verifier.git@main"
   python-version:
     description: Specify python verify_files2.json
     required: false
@@ -60,10 +56,8 @@ runs:
       id: install
       run: |
         echo "::group::pip install"
-        pip install "$PACKAGE_URL"
+        pip install "${{inputs.package}}"
         echo "::endgroup::"
         VERSION=$(competitive-verifier --version)
         echo "version=$VERSION"
         echo "version=$VERSION" >> $GITHUB_OUTPUT
-      env:
-        PACKAGE_URL: "git+${{inputs.repository}}@${{inputs.ref}}"

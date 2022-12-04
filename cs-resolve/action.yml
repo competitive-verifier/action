@@ -43,12 +43,18 @@ runs:
       shell: bash
       id: resolve
       run: |
-        competitive-verifier-cs-resolver ${{inputs.solution}} $unittest $problems $include $exclude $msbuild_props | tee "$OUTPUT_FILE"
-        echo "json-path=$OUTPUT_FILE" >> $GITHUB_OUTPUT
+        competitive-verifier-cs-resolver ${{inputs.solution}} \
+          $COMPETITIVE_unittest \
+          $COMPETITIVE_problems \
+          $COMPETITIVE_include \
+          $COMPETITIVE_exclude \
+          $COMPETITIVE_msbuild_props \
+          | tee "$COMPETITIVE_OUTPUT_FILE"
+        echo "json-path=$COMPETITIVE_OUTPUT_FILE" >> $GITHUB_OUTPUT
       env:
-        include: ${{ format(inputs.include && '--include {0}', inputs.include) }}
-        exclude: ${{ format(inputs.exclude && '--exclude {0}', inputs.exclude) }}
-        unittest: ${{ format(inputs.unittest-result && '--unittest {0}', inputs.unittest-result) }}
-        problems: ${{ format(inputs.problems && '--problems {0}', inputs.problems) }}
-        msbuild_props: ${{ format(inputs.msbuild-properties && '--properties {0}', inputs.msbuild-properties) }}
-        OUTPUT_FILE: ${{ inputs.output-path }}
+        COMPETITIVE_include: ${{ format(inputs.include && '--include {0}', inputs.include) }}
+        COMPETITIVE_exclude: ${{ format(inputs.exclude && '--exclude {0}', inputs.exclude) }}
+        COMPETITIVE_unittest: ${{ format(inputs.unittest-result && '--unittest {0}', inputs.unittest-result) }}
+        COMPETITIVE_problems: ${{ format(inputs.problems && '--problems {0}', inputs.problems) }}
+        COMPETITIVE_msbuild_props: ${{ format(inputs.msbuild-properties && '--properties {0}', inputs.msbuild-properties) }}
+        COMPETITIVE_OUTPUT_FILE: ${{ inputs.output-path }}

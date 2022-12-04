@@ -28,9 +28,9 @@ runs:
       shell: bash
       id: check
       run: |
-        competitive-verifier check $RESULT_FILES | tee "$RUNNER_TEMP/.temp.competitive-verifier.check.yml"
+        competitive-verifier check $COMPETITIVE_RESULT_FILES | tee "$RUNNER_TEMP/.temp.competitive-verifier.check.yml"
       env:
-        RESULT_FILES: ${{ inputs.verify-result }}
+        COMPETITIVE_RESULT_FILES: ${{ inputs.verify-result }}
 
     - name: Result
       shell: bash

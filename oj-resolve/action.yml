@@ -32,10 +32,10 @@ runs:
       shell: bash
       id: resolve
       run: |
-        competitive-verifier oj-resolve --include $include --exclude $exclude $config | tee "$OUTPUT_FILE"
-        echo "json-path=$OUTPUT_FILE" >> $GITHUB_OUTPUT
+        competitive-verifier oj-resolve --include $COMPETITIVE_include --exclude $COMPETITIVE_exclude $COMPETITIVE_config | tee "$COMPETITIVE_OUTPUT_FILE"
+        echo "json-path=$COMPETITIVE_OUTPUT_FILE" >> $GITHUB_OUTPUT
       env:
-        include: ${{ inputs.include }}
-        exclude: ${{ inputs.exclude }}
-        config: ${{ format(inputs.config && '--config {0}', inputs.config) }}
-        OUTPUT_FILE: ${{ inputs.output-path }}
+        COMPETITIVE_include: ${{ inputs.include }}
+        COMPETITIVE_exclude: ${{ inputs.exclude }}
+        COMPETITIVE_config: ${{ format(inputs.config && '--config {0}', inputs.config) }}
+        COMPETITIVE_OUTPUT_FILE: ${{ inputs.output-path }}

@@ -23,8 +23,8 @@ runs:
       id: merge
       shell: bash
       run: |
-        competitive-verifier merge-input $FILES | tee "$OUTPUT_FILE"
-        echo "json-path=$OUTPUT_FILE" >> $GITHUB_OUTPUT
+        competitive-verifier merge-input $COMPETITIVE_FILES | tee "$COMPETITIVE_OUTPUT_FILE"
+        echo "json-path=$COMPETITIVE_OUTPUT_FILE" >> $GITHUB_OUTPUT
       env:
-        FILES: ${{ inputs.verify-files }}
-        OUTPUT_FILE: ${{ inputs.output-path }}
+        COMPETITIVE_FILES: ${{ inputs.verify-files }}
+        COMPETITIVE_OUTPUT_FILE: ${{ inputs.output-path }}
