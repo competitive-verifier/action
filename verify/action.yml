@@ -59,8 +59,8 @@ runs:
       run: |
         if competitive-verifier \
           ${{ fromJson(inputs.verbose)       && '--verbose'       || '' }} \
-          ${{ fromJson(inputs.write-summary) && '--write-summary' || '' }} \
           verify --check-error \
+          ${{ fromJson(inputs.write-summary) && '--write-summary' || '' }} \
           ${{ format(inputs.timeout     && '--timeout {0}',     inputs.timeout) }} \
           ${{ format(inputs.tle         && '--tle {0}',         inputs.tle) }} \
           ${{ format(inputs.prev-result && '--prev-result {0}', inputs.prev-result) }} \
