@@ -1,0 +1,1 @@
+{"files":{"parse-doxygen/__tests__/code/aplusb.cpp":{"verification":[{"type":"const","status":"success"}],"document_attributes":{"document_title":"$A + B$"}},"parse-doxygen/__tests__/code/hello.cpp":{"document_attributes":{"document_title":"Hello World!"}},"parse-doxygen/__tests__/main.test.ts":{"document_attributes":{}}}}

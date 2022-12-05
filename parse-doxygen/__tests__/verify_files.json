@@ -1,0 +1,18 @@
+{
+    "files": {
+        "parse-doxygen/__tests__/code/aplusb.cpp": {
+            "verification": [
+                {
+                    "type": "const",
+                    "status": "success"
+                }
+            ]
+        },
+        "parse-doxygen/__tests__/code/hello.cpp": {
+            "document_attributes": {}
+        },
+        "parse-doxygen/__tests__/main.test.ts": {
+            "document_attributes": {}
+        }
+    }
+}

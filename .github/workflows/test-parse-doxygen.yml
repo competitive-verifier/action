@@ -1,0 +1,32 @@
+name: Test parse-doxygen
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - parse-doxygen/**
+      - .github/workflows/test-parse-doxygen.yml
+  pull_request:
+    paths:
+      - parse-doxygen/**
+      - .github/workflows/test-parse-doxygen.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Copy test file
+        run: cp parse-doxygen/__tests__/verify_files.json "${{runner.temp}}/verify-files.json"
+
+      - name: parse-doxygen
+        uses: ./parse-doxygen
+        with:
+          verify-files: ${{runner.temp}}/verify-files.json
+
+      - name: Test
+        run: diff "${{runner.temp}}/verify-files.json" parse-doxygen/__tests__/expected.json

@@ -1,0 +1,10 @@
+name: parse-doxygen
+description: "Parse doxygen and apply to verify_files.json"
+author: kzrnm
+inputs:
+  verify-files:
+    description: "The file path of verify files json."
+    required: true
+runs:
+  using: "node16"
+  main: "dist/index.js"
