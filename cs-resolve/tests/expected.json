@@ -2,6 +2,7 @@
     "files": {
         "cs-resolve/tests/UnitTest/CircleTest.cs": {
             "dependencies": [
+                "cs-resolve/tests/UnitTest/CircleTest.cs",
                 "cs-resolve/tests/ClassLibrary/Circle.class.cs"
             ],
             "verification": [
@@ -72,6 +73,7 @@
         },
         "cs-resolve/tests/VerifyApp/CircleAizu.cs": {
             "dependencies": [
+                "cs-resolve/tests/VerifyApp/CircleAizu.cs",
                 "cs-resolve/tests/ClassLibrary/Circle.class.cs"
             ],
             "verification": [
@@ -152,7 +154,9 @@
             ]
         },
         "cs-resolve/tests/ClassLibrary/Circle.record.cs": {
-            "dependencies": [],
+            "dependencies": [
+                "cs-resolve/tests/ClassLibrary/Circle.record.cs"
+            ],
             "additonal_sources": [],
             "verification": []
         }
