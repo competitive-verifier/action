@@ -51,6 +51,7 @@ jobs:
           include: cs-resolve/tests
           exclude: "**/Usings.cs **/obj/** **/bin/**"
           output-path: ./verify-files.json
+          msbuild-properties: Configuration=Release
           unittest-result: ${{runner.temp}}/VerifierUnitTestCs/*.csv
           problems: ${{runner.temp}}/problems.json
 
