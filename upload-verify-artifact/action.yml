@@ -24,7 +24,9 @@ runs:
       shell: bash
       id: validate
       run: |
-        file="$(echo $file)"
+        if [ ! -f "$file" ] ; then
+          file="$(echo $file)"
+        fi
         echo "$file"
         if [ ! -f "$file" ] ; then
           echo "::error::file must be single file."

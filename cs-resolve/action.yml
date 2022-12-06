@@ -43,9 +43,10 @@ runs:
       shell: bash
       id: resolve
       run: |
+        set -f
         competitive-verifier-cs-resolver ${{inputs.solution}} \
-          $COMPETITIVE_unittest \
-          $COMPETITIVE_problems \
+          $(set +f && echo $COMPETITIVE_unittest) \
+          $(set +f && echo $COMPETITIVE_problems) \
           $COMPETITIVE_include \
           $COMPETITIVE_exclude \
           $COMPETITIVE_msbuild_props \
