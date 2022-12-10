@@ -38,7 +38,7 @@ inputs:
 outputs:
   json-path:
     description: "The path of verify files json."
-    value: ${{ steps.resolve.outputs.json-path }}
+    value: ${{ steps.path.outputs.json-path }}
 runs:
   using: composite
   steps:
@@ -55,7 +55,6 @@ runs:
           $COMPETITIVE_exclude \
           $COMPETITIVE_msbuild_props \
           | tee "$COMPETITIVE_OUTPUT_FILE"
-        echo "json-path=$COMPETITIVE_OUTPUT_FILE" >> $GITHUB_OUTPUT
       env:
         COMPETITIVE_include: ${{ format(inputs.include && '--include {0}', inputs.include) }}
         COMPETITIVE_exclude: ${{ format(inputs.exclude && '--exclude {0}', inputs.exclude) }}
@@ -63,3 +62,10 @@ runs:
         COMPETITIVE_problems: ${{ format(inputs.problems && '--problems {0}', inputs.problems) }}
         COMPETITIVE_msbuild_props: ${{ format(inputs.msbuild-properties && '--properties {0}', inputs.msbuild-properties) }}
         COMPETITIVE_OUTPUT_FILE: ${{ inputs.output-path }}
+
+    - name: Path
+      id: path
+      shell: pwsh
+      run: |
+        $output = (Get-Item "${{ inputs.output-path }}").FullName
+        echo "json-path=$output" >> $env:GITHUB_OUTPUT
