@@ -88,3 +88,18 @@ jobs:
           docs: docs/tests/config/
       - name: Test docs config
         run: test "$(yq -r .description $RUNNER_TEMP/.competitive-verifier/jekyll-summary/_config.yml)" = "Test description"
+
+      - name: Create docs subdir
+        id: docs-subdir
+        uses: ./docs
+        with:
+          working-directory: docs/tests
+          verify-files: verify-files.json
+          verify-result: pyres*/competitive-verifier-result.json
+          destination: ${{runner.temp}}/.competitive-verifier/jekyll-subdir
+          write-summary: true
+      - name: Test subdir
+        run: |
+          [ $(wc -c < "$GITHUB_STEP_SUMMARY") > 0 ]
+          rm $GITHUB_STEP_SUMMARY
+          ls ${RUNNER_TEMP}/.competitive-verifier/jekyll-subdir

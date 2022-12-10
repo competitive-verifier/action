@@ -43,6 +43,20 @@ jobs:
             merge-verify-files/tests/file2.json
           output-path: merged-list.json
 
+      - name: In subdir
+        id: subdir
+        uses: ./merge-verify-files
+        with:
+          verify-files: file*.json
+          working-directory: merge-verify-files/tests
+          output-path: merged-subdir.json
+
+      - name: Check path
+        run: |
+          test "${{steps.glob.outputs.json-path}}" = "$GITHUB_WORKSPACE/merged-glob.json"
+          test "${{steps.list.outputs.json-path}}" = "$GITHUB_WORKSPACE/merged-list.json"
+          test "${{steps.subdir.outputs.json-path}}" = "$GITHUB_WORKSPACE/merge-verify-files/tests/merged-subdir.json"
+
       - name: Check glob
         uses: ./testing/verifier-object-equality-action
         with:
@@ -55,4 +69,11 @@ jobs:
         with:
           class: VerificationInput
           file1: ${{steps.list.outputs.json-path}}
+          file2: merge-verify-files/tests/merged.json
+
+      - name: Check subdir
+        uses: ./testing/verifier-object-equality-action
+        with:
+          class: VerificationInput
+          file1: ${{steps.subdir.outputs.json-path}}
           file2: merge-verify-files/tests/merged.json

@@ -56,10 +56,10 @@ jobs:
           output-path: verify-files-with-awk.json
       - name: Check path
         run: |
-          test "${{steps.include.outputs.json-path}}" = "/home/runner/work/actions/actions/verify-files.json"
+          test "${{steps.include.outputs.json-path}}" = "$GITHUB_WORKSPACE/verify-files.json"
           test "${{steps.exclude.outputs.json-path}}" = "$RUNNER_TEMP/verify-files.json"
-          test "${{steps.all.outputs.json-path}}" = "/home/runner/work/actions/actions/verify-files-all.json"
-          test "${{steps.awk.outputs.json-path}}" = "/home/runner/work/actions/actions/verify-files-with-awk.json"
+          test "${{steps.all.outputs.json-path}}" = "$GITHUB_WORKSPACE/verify-files-all.json"
+          test "${{steps.awk.outputs.json-path}}" = "$GITHUB_WORKSPACE/verify-files-with-awk.json"
 
       - name: Check awk
         run: |
@@ -95,7 +95,7 @@ jobs:
           output-path: verify-files-with-awk.json
       - name: Check path in sub
         run: |
-          test "${{steps.awk-sub.outputs.json-path}}" = "/home/runner/work/actions/actions/oj-resolve/tests-sub/verify-files-with-awk.json"
+          test "${{steps.awk-sub.outputs.json-path}}" = "$GITHUB_WORKSPACE/oj-resolve/tests-sub/verify-files-with-awk.json"
       - name: Check awk-sub
         run: |
           cat "${{steps.awk-sub.outputs.json-path}}" | jq '.files."awk/circle.test.awk"' | grep "awk/circle.awk"

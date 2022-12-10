@@ -22,12 +22,16 @@ inputs:
     description: If true, show GitHub Actions Summary
     required: false
     default: "true"
+  working-directory:
+    description: Specifies the working directory where the command is run.
+    required: false
 runs:
   using: composite
   steps:
     - name: Run docs
       shell: bash
       id: docs
+      working-directory: ${{inputs.working-directory}}
       run: |
         COMPETITIVE_RESULT_FILES="$(echo $COMPETITIVE_RESULT_FILES)"
         competitive-verifier docs \

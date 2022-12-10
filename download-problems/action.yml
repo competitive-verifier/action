@@ -9,6 +9,9 @@ inputs:
     description: "The file path of verify files json. default: $COMPETITIVE_VERIFY_FILES_PATH environment variable."
     required: false
     default: ""
+  working-directory:
+    description: Specifies the working directory where the command is run.
+    required: false
 outputs:
   problems:
     description: "Problem urls"
@@ -23,6 +26,7 @@ runs:
     - name: List problems
       id: list-problems
       shell: bash
+      working-directory: ${{inputs.working-directory}}
       run: |
         problems=$(jq -r '.files|map(.verification|if type=="array" then . else [.] end | .[].problem|select(. != null))|sort|unique[]' "$COMPETITIVE_VERIFY_FILES_PATH")
         md5=$(echo "$problems" | md5sum | cut -c 1-32)
@@ -39,5 +43,6 @@ runs:
     - name: Run download
       shell: bash
       run: competitive-verifier download
+      working-directory: ${{inputs.working-directory}}
       env:
         COMPETITIVE_VERIFY_FILES_PATH: ${{ inputs.verify-files || env.COMPETITIVE_VERIFY_FILES_PATH }}

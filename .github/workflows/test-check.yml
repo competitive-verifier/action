@@ -78,3 +78,17 @@ jobs:
           [ "${{ steps.check-failure.outputs.result-count-success }}" = "1" ]
           [ "${{ steps.check-failure.outputs.result-count-failure }}" = "1" ]
           [ "${{ steps.check-failure.outputs.result-count-skipped }}" = "0" ]
+
+      - name: Check success subdir
+        id: check-success-subdir
+        uses: ./check
+        with:
+          working-directory: check/tests
+          verify-result: pyres*/competitive-verifier-result.json
+      - name: Test success subdir
+        run: |
+          [ "${{ steps.check-success-subdir.outcome }}" = "success" ]
+          [ "${{ steps.check-success-subdir.outputs.result-count }}" = "3" ]
+          [ "${{ steps.check-success-subdir.outputs.result-count-success }}" = "3" ]
+          [ "${{ steps.check-success-subdir.outputs.result-count-failure }}" = "0" ]
+          [ "${{ steps.check-success-subdir.outputs.result-count-skipped }}" = "0" ]

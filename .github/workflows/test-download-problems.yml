@@ -54,3 +54,19 @@ jobs:
           test "${{ steps.with.outputs.problems-hash }}"  = "1fe359fd6574ab4a8b8ad5a6bb27d373"
 
           test "$(ls .competitive-verifier/cache/problems/*/test -d | wc -l)" = 1
+          rm -rf .competitive-verifier/cache
+
+
+      - name: Download with verify-files subdir
+        id: with-subdir
+        uses: ./download-problems
+        with:
+          working-directory: download-problems/tests
+          verify-files: verify_files2.json
+
+      - name: Test verify-files
+        run: |
+          test "${{ steps.with-subdir.outputs.problems }}"  = "https://onlinejudge.u-aizu.ac.jp/courses/lesson/2/ITP1/1/ITP1_1_A"
+          test "${{ steps.with-subdir.outputs.problems-hash }}"  = "1fe359fd6574ab4a8b8ad5a6bb27d373"
+          test "$(ls download-problems/tests/.competitive-verifier/cache/problems/*/test -d | wc -l)" = 1
+          rm -rf download-problems/tests/.competitive-verifier/cache

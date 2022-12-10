@@ -12,7 +12,7 @@ inputs:
   artifact-root:
     description: Artifacts path.
     required: false
-    default: ./.verifier.artifacts
+    default: ${{runner.temp}}/.verifier.artifacts
   download-all:
     description: "If true, the action download all artifacts."
     required: false
@@ -21,31 +21,43 @@ inputs:
     description: If true, set verify_files.json path to $COMPETITIVE_VERIFY_FILES_PATH
     required: false
     default: "true"
+  working-directory:
+    description: Specifies the working directory where the command is run.
+    required: false
 outputs:
   artifacts-root:
     description: Artifacts directory
-    value: ${{inputs.artifact-root}}
+    value: ${{steps.artifact-path.outputs.artifact-root}}
   json-path:
     description: verify_files.json path
-    value: ${{steps.validate.outputs.file}}
+    value: ${{steps.path.outputs.file}}
 runs:
   using: composite
   steps:
+    - name: Path
+      id: artifact-path
+      shell: pwsh
+      working-directory: ${{inputs.working-directory}}
+      run: |
+        $output = (New-Item -Type Directory ./.hoge -Force).FullName
+        echo "artifact-root=$output" >> $env:GITHUB_OUTPUT
+
     - name: Download artifact
       uses: actions/download-artifact@v3
       if: ${{!fromJSON(inputs.download-all)}}
       with:
         name: ${{ inputs.artifact-name }}
-        path: ${{ inputs.artifact-root }}/${{ inputs.artifact-name }}
+        path: ${{ steps.artifact-path.outputs.artifact-root }}/${{ inputs.artifact-name }}
     - name: Download all artifacts
       uses: actions/download-artifact@v3
       if: ${{fromJSON(inputs.download-all)}}
       with:
-        path: ${{ inputs.artifact-root }}
+        path: ${{ steps.artifact-path.outputs.artifact-root }}
 
     - name: Validate
       shell: bash
       id: validate
+      working-directory: ${{inputs.working-directory}}
       run: |
         file="$(echo $COMPETITIVE_root/*)"
         echo "$file"
@@ -59,10 +71,19 @@ runs:
         fi
         echo "file=$file" >> $GITHUB_OUTPUT
       env:
-        COMPETITIVE_root: ${{ inputs.artifact-root }}/${{ inputs.artifact-name }}
+        COMPETITIVE_root: ${{ steps.artifact-path.outputs.artifact-root }}/${{ inputs.artifact-name }}
+
+    - name: Path
+      id: path
+      shell: pwsh
+      working-directory: ${{inputs.working-directory}}
+      run: |
+        $output = (Get-Item "${{ inputs.output-path }}").FullName
+        echo "json-path=$output" >> $env:GITHUB_OUTPUT
 
     - name: Set $COMPETITIVE_VERIFY_FILES_PATH
       if: ${{fromJSON(inputs.set-env)}}
       shell: bash
+      working-directory: ${{inputs.working-directory}}
       run: |
-        echo "COMPETITIVE_VERIFY_FILES_PATH=${{steps.validate.outputs.file}}" >> $GITHUB_ENV
+        echo "COMPETITIVE_VERIFY_FILES_PATH=${{steps.path.outputs.file}}" >> $GITHUB_ENV
