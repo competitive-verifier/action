@@ -50,20 +50,42 @@ jobs:
           solution: cs-resolve/tests/tests.sln
           include: cs-resolve/tests
           exclude: "**/Usings.cs **/obj/** **/bin/**"
-          output-path: ./verify-files.json
+          output-path: ${{runner.temp}}/all-verify-files.json
           msbuild-properties: Configuration=Release
           unittest-result: ${{runner.temp}}/VerifierUnitTestCs/*.csv
           problems: ${{runner.temp}}/problems.json
 
       - name: Check path
         run: |
-          test "${{steps.resolve.outputs.json-path}}" = "./verify-files.json"
+          test "${{steps.resolve.outputs.json-path}}" = "$RUNNER_TEMP/all-verify-files.json"
 
       - name: Replace expected path
         id: expected
         run: |
           sed -e "s:{{{PWD}}}:$PWD:g" cs-resolve/tests/expected.json > $RUNNER_TEMP/actual-expected.json
           echo "json-path=$RUNNER_TEMP/actual-expected.json" >> $GITHUB_OUTPUT
+
+      - name: Sub cs-resolve
+        id: sub-resolve
+        uses: ./cs-resolve
+        with:
+          solution: tests.sln
+          exclude: "**/Usings.cs **/obj/** **/bin/**"
+          output-path: ${{runner.temp}}/sub-verify-files.json
+          msbuild-properties: Configuration=Release
+          unittest-result: ${{runner.temp}}/VerifierUnitTestCs/*.csv
+          problems: ${{runner.temp}}/problems.json
+          working-directory: cs-resolve/tests
+
+      - name: Check sub path
+        run: |
+          test "${{steps.sub-resolve.outputs.json-path}}" = "$RUNNER_TEMP/sub-verify-files.json"
+
+      - name: Replace expected sub path
+        id: sub-expected
+        run: |
+          sed -e 's|"cs-resolve/tests/|"|g' $RUNNER_TEMP/actual-expected.json > $RUNNER_TEMP/actual-sub-expected.json
+          echo "json-path=$RUNNER_TEMP/actual-sub-expected.json" >> $GITHUB_OUTPUT
 
       - name: Set up competitive-verifier
         uses: ./setup
@@ -76,3 +98,10 @@ jobs:
           class: VerificationInput
           file1: ${{steps.resolve.outputs.json-path}}
           file2: ${{steps.expected.outputs.json-path}}
+
+      - name: equal sub
+        uses: ./testing/verifier-object-equality-action
+        with:
+          class: VerificationInput
+          file1: ${{steps.sub-resolve.outputs.json-path}}
+          file2: ${{steps.sub-expected.outputs.json-path}}
