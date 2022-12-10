@@ -94,8 +94,8 @@ jobs:
         uses: ./docs
         with:
           working-directory: docs/tests
-          verify-files: verify-files.json
-          verify-result: pyres*/competitive-verifier-result.json
+          verify-files: subdir/verify-files.json
+          verify-result: subdir/result*.json
           destination: ${{runner.temp}}/.competitive-verifier/jekyll-subdir
           write-summary: true
       - name: Test subdir
