@@ -66,6 +66,7 @@ runs:
     - name: Path
       id: path
       shell: pwsh
+      working-directory: ${{ inputs.working-directory  || '.' }}
       run: |
         $output = (Get-Item "${{ inputs.output-path }}").FullName
         echo "json-path=$output" >> $env:GITHUB_OUTPUT
