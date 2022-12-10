@@ -41,6 +41,12 @@ const parse_1 = __nccwpck_require__(223);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            const working_directory = core.getInput('working-directory', {
+                trimWhitespace: true
+            });
+            if (working_directory) {
+                process.chdir(working_directory);
+            }
             const verify_files_path = core.getInput('verify-files', { required: true });
             core.info(`verify-files=${verify_files_path}`);
             const verify_files_json = yield fs.readFile(verify_files_path, {

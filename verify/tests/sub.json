@@ -1,0 +1,33 @@
+{
+    "$schema": "https://raw.githubusercontent.com/competitive-verifier/competitive-verifier/main/schema/verify_files.schema.json",
+    "files": {
+        "dummy1.txt": {
+            "dependencies": [],
+            "verification": {
+                "type": "command",
+                "command": "true"
+            }
+        },
+        "dummy2.txt": {
+            "dependencies": [],
+            "verification": {
+                "type": "command",
+                "command": "true"
+            }
+        },
+        "dummy3.txt": {
+            "dependencies": [],
+            "verification": {
+                "type": "command",
+                "command": "true"
+            }
+        },
+        "dummy4.txt": {
+            "dependencies": [],
+            "verification": {
+                "type": "command",
+                "command": "ls sub.json failure.json success.json"
+            }
+        }
+    }
+}

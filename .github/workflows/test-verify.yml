@@ -139,3 +139,23 @@ jobs:
           rm $GITHUB_STEP_SUMMARY
           [ "${{ steps.verify-success-split-over.outputs.is-success }}"  = "true" ]
           [ $(jq '.files|length' "$RUNNER_TEMP/result.json") = 0 ]
+
+      - name: Verify success check in subdir
+        id: verify-success-check-sub
+        uses: ./verify
+        with:
+          verify-files: sub.json
+          timeout: 10
+          tle: 1
+          destination: ${{runner.temp}}/sub-result.json
+          check: true
+          verbose: true
+          working-directory: verify/tests
+
+      - name: Test success check is subdir
+        run: |
+          [ $(wc -c < "$GITHUB_STEP_SUMMARY") = 0 ]
+          rm $GITHUB_STEP_SUMMARY
+          [ "${{ steps.verify-success-check-sub.outputs.is-success }}"  = "true" ]
+          [ "${{ steps.verify-success-check-sub.outcome }}" = "success" ]
+          [ $(jq '.files|length' "$RUNNER_TEMP/sub-result.json") = 4 ]

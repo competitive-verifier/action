@@ -45,6 +45,9 @@ inputs:
     description: If true, debug log is enabled.
     required: false
     default: "false"
+  working-directory:
+    description: Specifies the working directory where the command is run.
+    required: false
 outputs:
   is-success:
     description: "Result boolean of `competitive-verifier verify`."
@@ -56,6 +59,7 @@ runs:
     - name: Run verify
       shell: bash
       id: verify
+      working-directory: ${{inputs.working-directory}}
       run: |
         if competitive-verifier \
           ${{ fromJson(inputs.verbose)       && '--verbose'       || '' }} \
