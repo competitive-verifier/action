@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Copy test file
-        run: cp parse-doxygen/__tests__/verify_files.json "${{runner.temp}}/verify-files.json"
+        run: cp parse-doxygen/__tests__/verify_files.json "$RUNNER_TEMP/verify-files.json"
 
       - name: parse-doxygen
         uses: ./parse-doxygen
@@ -29,4 +29,18 @@ jobs:
           verify-files: ${{runner.temp}}/verify-files.json
 
       - name: Test
-        run: diff "${{runner.temp}}/verify-files.json" parse-doxygen/__tests__/expected.json
+        run: diff "$RUNNER_TEMP/verify-files.json" parse-doxygen/__tests__/expected.json
+
+      - name: sed subdir test file
+        run: |
+          sed -e 's|parse-doxygen/__tests__/||g' parse-doxygen/__tests__/verify_files.json > $RUNNER_TEMP/sub-verify-files.json
+          sed -e 's|parse-doxygen/__tests__/||g' parse-doxygen/__tests__/expected.json > $RUNNER_TEMP/sub-expected.json
+
+      - name: parse-doxygen subdir
+        uses: ./parse-doxygen
+        with:
+          verify-files: ${{runner.temp}}/sub-verify-files.json
+          working-directory: parse-doxygen/__tests__
+
+      - name: Test subdir
+        run: diff "$RUNNER_TEMP/sub-verify-files.json" "$RUNNER_TEMP/sub-expected.json"

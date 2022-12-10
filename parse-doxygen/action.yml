@@ -5,6 +5,9 @@ inputs:
   verify-files:
     description: "The file path of verify files json."
     required: true
+  working-directory:
+    description: Specifies the working directory where the command is run.
+    required: false
 runs:
   using: "node16"
   main: "dist/index.js"

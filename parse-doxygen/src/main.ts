@@ -4,6 +4,13 @@ import {parseFiles} from './parse'
 
 async function run(): Promise<void> {
   try {
+    const working_directory = core.getInput('working-directory', {
+      trimWhitespace: true
+    })
+    if (working_directory) {
+      process.chdir(working_directory)
+    }
+
     const verify_files_path = core.getInput('verify-files', {required: true})
     core.info(`verify-files=${verify_files_path}`)
     const verify_files_json = await fs.readFile(verify_files_path, {
