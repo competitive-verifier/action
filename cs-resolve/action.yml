@@ -45,7 +45,7 @@ runs:
     - name: cs-resolve
       shell: bash
       id: resolve
-      working-directory: ${{ inputs.working-directory  || '.' }}
+      working-directory: ${{inputs.working-directory}}
       run: |
         set -f
         competitive-verifier-cs-resolver ${{inputs.solution}} \
@@ -66,7 +66,7 @@ runs:
     - name: Path
       id: path
       shell: pwsh
-      working-directory: ${{ inputs.working-directory  || '.' }}
+      working-directory: ${{inputs.working-directory}}
       run: |
         $output = (Get-Item "${{ inputs.output-path }}").FullName
         echo "json-path=$output" >> $env:GITHUB_OUTPUT

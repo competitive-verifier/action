@@ -8,6 +8,9 @@ inputs:
   verify-result:
     description: "The json files that are verify command result. You can use wildcard pattern."
     required: true
+  working-directory:
+    description: Specifies the working directory where the command is run.
+    required: false
 outputs:
   result-count:
     description: "Result count"
@@ -27,6 +30,7 @@ runs:
     - name: Run check
       shell: bash
       id: check
+      working-directory: ${{inputs.working-directory}}
       run: |
         competitive-verifier check $COMPETITIVE_RESULT_FILES | tee "$RUNNER_TEMP/.temp.competitive-verifier.check.yml"
       env:
@@ -36,6 +40,7 @@ runs:
       shell: bash
       id: result
       if: success() || failure()
+      working-directory: ${{inputs.working-directory}}
       run: |
         success=$(cat "$CHECK_YML" |grep success|sed -e 's/success: *//g')
         echo "success=$success" >> $GITHUB_OUTPUT
