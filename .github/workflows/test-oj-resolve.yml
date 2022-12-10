@@ -56,10 +56,10 @@ jobs:
           output-path: verify-files-with-awk.json
       - name: Check path
         run: |
-          test "${{steps.include.outputs.json-path}}" = "./verify-files.json"
+          test "${{steps.include.outputs.json-path}}" = "/home/runner/work/actions/actions/verify-files.json"
           test "${{steps.exclude.outputs.json-path}}" = "$RUNNER_TEMP/verify-files.json"
-          test "${{steps.all.outputs.json-path}}" = "verify-files-all.json"
-          test "${{steps.awk.outputs.json-path}}" = "verify-files-with-awk.json"
+          test "${{steps.all.outputs.json-path}}" = "/home/runner/work/actions/actions/verify-files-all.json"
+          test "${{steps.awk.outputs.json-path}}" = "/home/runner/work/actions/actions/verify-files-with-awk.json"
 
       - name: Check awk
         run: |
@@ -85,3 +85,17 @@ jobs:
           file1: ${{steps.include.outputs.json-path}}
           file2: ${{steps.awk.outputs.json-path}}
           not: true
+
+      - name: oj-resolve with awk in sub
+        id: awk-sub
+        uses: ./oj-resolve
+        with:
+          working-directory: oj-resolve/tests-sub
+          config: awk-config.toml
+          output-path: verify-files-with-awk.json
+      - name: Check path in sub
+        run: |
+          test "${{steps.awk-sub.outputs.json-path}}" = "/home/runner/work/actions/actions/oj-resolve/tests-sub/verify-files-with-awk.json"
+      - name: Check awk-sub
+        run: |
+          cat "${{steps.awk-sub.outputs.json-path}}" | jq '.files."awk/circle.test.awk"' | grep "awk/circle.awk"

@@ -21,16 +21,20 @@ inputs:
     description: "Argument of oj-resolve --config."
     required: false
     default: ""
+  working-directory:
+    description: Specifies the working directory where the command is run.
+    required: false
 outputs:
   json-path:
     description: "The path of verify files json."
-    value: ${{ steps.resolve.outputs.json-path }}
+    value: ${{ steps.path.outputs.json-path }}
 runs:
   using: composite
   steps:
     - name: oj-resolve
       shell: bash
       id: resolve
+      working-directory: ${{ inputs.working-directory  || '.' }}
       run: |
         set -f
         competitive-verifier oj-resolve --include $COMPETITIVE_include --exclude $COMPETITIVE_exclude $(set +f && echo $COMPETITIVE_config) | tee "$COMPETITIVE_OUTPUT_FILE"
@@ -40,3 +44,11 @@ runs:
         COMPETITIVE_exclude: ${{ inputs.exclude }}
         COMPETITIVE_config: ${{ format(inputs.config && '--config {0}', inputs.config) }}
         COMPETITIVE_OUTPUT_FILE: ${{ inputs.output-path }}
+
+    - name: Path
+      id: path
+      shell: pwsh
+      working-directory: ${{ inputs.working-directory  || '.' }}
+      run: |
+        $output = (Get-Item "${{ inputs.output-path }}").FullName
+        echo "json-path=$output" >> $env:GITHUB_OUTPUT
