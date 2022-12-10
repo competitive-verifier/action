@@ -39,7 +39,7 @@ runs:
       shell: pwsh
       working-directory: ${{inputs.working-directory}}
       run: |
-        $output = (New-Item -Type Directory ./.hoge -Force).FullName
+        $output = (New-Item -Type Directory "${{ inputs.artifact-root }}" -Force).FullName
         echo "artifact-root=$output" >> $env:GITHUB_OUTPUT
 
     - name: Download artifact
@@ -78,8 +78,8 @@ runs:
       shell: pwsh
       working-directory: ${{inputs.working-directory}}
       run: |
-        $output = (Get-Item "${{ inputs.output-path }}").FullName
-        echo "json-path=$output" >> $env:GITHUB_OUTPUT
+        $output = (Get-Item "${{steps.validate.outputs.file}}").FullName
+        echo "file=$output" >> $env:GITHUB_OUTPUT
 
     - name: Set $COMPETITIVE_VERIFY_FILES_PATH
       if: ${{fromJSON(inputs.set-env)}}

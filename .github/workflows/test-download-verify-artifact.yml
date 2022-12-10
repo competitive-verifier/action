@@ -83,16 +83,16 @@ jobs:
           test "${{steps.all.outputs.json-path}}" = "$GITHUB_WORKSPACE/all_artifacts/file/verify_files.json"
           test "$COMPETITIVE_VERIFY_FILES_PATH" = "$GITHUB_WORKSPACE/all_artifacts/file/verify_files.json"
 
-      - name: Download file
+      - name: Download file sub
         id: file-sub
         uses: ./download-verify-artifact
         with:
           working-directory: download-verify-artifact
           artifact-name: file
           artifact-root: file_artifacts
-      - name: Test output
+      - name: Test output sub
         run: |
-          ls $GITHUB_WORKSPACE/file_artifacts/file/
-          test "${{steps.all.outputs.artifacts-root}}" = "$GITHUB_WORKSPACE/file_artifacts"
-          test "${{steps.all.outputs.json-path}}" = "$GITHUB_WORKSPACE/file_artifacts/file/verify_files.json"
-          test "$COMPETITIVE_VERIFY_FILES_PATH" = "$GITHUB_WORKSPACE/file_artifacts/file/verify_files.json"
+          ls $GITHUB_WORKSPACE/download-verify-artifact/file_artifacts/file/
+          test "${{steps.file-sub.outputs.artifacts-root}}" = "$GITHUB_WORKSPACE/download-verify-artifact/file_artifacts"
+          test "${{steps.file-sub.outputs.json-path}}" = "$GITHUB_WORKSPACE/download-verify-artifact/file_artifacts/file/verify_files.json"
+          test "$COMPETITIVE_VERIFY_FILES_PATH" = "$GITHUB_WORKSPACE/download-verify-artifact/file_artifacts/file/verify_files.json"
