@@ -28,9 +28,15 @@ jobs:
 
       - name: Python 3.9
         uses: ./setup
+        id: python39
         with:
           cache-pip: true
           python-version: "3.9"
+          package: competitive-verifier==1.2.1-dev
+      - name: Test 3.9
+        run: |
+          [ "${{ steps.python39.outputs.version }}" = "1.2.1.dev0" ]
+
 
       - name: Python 3.10
         uses: ./setup
@@ -40,4 +46,4 @@ jobs:
           package: git+https://github.com/competitive-verifier/competitive-verifier.git@eeb93b5c71fb1caac9a439c936c13a384387db84
       - name: Test 3.10
         run: |
-          [ ${{ steps.python310.outputs.version }} = "0.0.1" ]
+          [ "${{ steps.python310.outputs.version }}" = "0.0.1" ]
