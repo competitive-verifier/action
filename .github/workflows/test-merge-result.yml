@@ -31,14 +31,14 @@ jobs:
         id: glob
         uses: ./merge-result
         with:
-          verify-files: merge-result/tests/pyres*/*.json
+          result-files: merge-result/tests/pyres*/*.json
           output-path: merged-glob.json
 
       - name: Use list
         id: list
         uses: ./merge-result
         with:
-          verify-files: |
+          result-files: |
             merge-result/tests/pyres0/competitive-verifier-result.json
             merge-result/tests/pyres1/competitive-verifier-result.json
             merge-result/tests/pyres2/competitive-verifier-result.json
@@ -49,7 +49,7 @@ jobs:
         id: subdir
         uses: ./merge-result
         with:
-          verify-files: pyres*/competitive-verifier-result.json
+          result-files: pyres*/competitive-verifier-result.json
           working-directory: merge-result/tests
           output-path: merged-subdir.json
 
