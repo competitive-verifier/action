@@ -7,6 +7,7 @@ See [competitive-verifier/competitive-verifier](https://github.com/competitive-v
 - [oj-resolve](oj-resolve)
 - [cs-resolve](cs-resolve)
 - [merge-verify-files](merge-verify-files)
+- [merge-result](merge-result)
 - [upload-verify-artifact](upload-verify-artifact)
 - [download-problems](download-problems)
 - [download-verify-artifact](download-verify-artifact)
