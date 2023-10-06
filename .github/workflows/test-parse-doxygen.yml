@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Copy test file
         run: cp parse-doxygen/__tests__/verify_files.json "$RUNNER_TEMP/verify-files.json"
