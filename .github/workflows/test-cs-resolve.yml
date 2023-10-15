@@ -89,8 +89,6 @@ jobs:
 
       - name: Set up competitive-verifier
         uses: ./setup
-        with:
-          python-version: "3.9"
 
       - name: equal
         uses: ./testing/verifier-object-equality-action

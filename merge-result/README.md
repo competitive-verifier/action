@@ -8,8 +8,6 @@ See [action.yml](action.yml) or [competitive-verifier/competitive-verifier](http
 ```yml
       - name: Set up competitive-verifier
         uses: competitive-verifier/actions/setup@v1
-        with:
-          python-version: "3.9"
 
       - name: Use glob
         id: glob
