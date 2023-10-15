@@ -25,8 +25,6 @@ jobs:
 
       - name: Set up competitive-verifier
         uses: competitive-verifier/actions/setup@v1
-        with:
-          python-version: "3.9"
 
       - name: equal
         uses: competitive-verifier/actions/verifier-object-equality-action@v1

@@ -25,7 +25,6 @@ jobs:
       - name: Set up competitive-verifier
         uses: ./setup
         with:
-          python-version: "3.9"
           cache-pip: true
 
       - name: Download env $COMPETITIVE_VERIFY_FILES_PATH
