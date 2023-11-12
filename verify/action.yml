@@ -66,8 +66,8 @@ runs:
       working-directory: ${{inputs.working-directory}}
       run: |
         if competitive-verifier \
-          ${{ fromJson(inputs.verbose)       && '--verbose'       || '' }} \
           verify --check-error \
+          ${{ fromJson(inputs.verbose)       && '--verbose'       || '' }} \
           ${{ fromJson(inputs.write-summary) && '--write-summary' || '' }} \
           ${{ format(inputs.timeout     && '--timeout {0}',     inputs.timeout) }} \
           ${{ format(inputs.tle         && '--tle {0}',         inputs.tle) }} \
