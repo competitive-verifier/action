@@ -18,7 +18,11 @@ inputs:
     required: false
     default: ""
   tle:
-    description: TLE threshold seconds
+    description: Threshold seconds to be TLE
+    required: false
+    default: ""
+  mle:
+    description: Threshold memory usage (MB) to be MLE
     required: false
     default: ""
   prev-result:
@@ -67,6 +71,7 @@ runs:
           ${{ fromJson(inputs.write-summary) && '--write-summary' || '' }} \
           ${{ format(inputs.timeout     && '--timeout {0}',     inputs.timeout) }} \
           ${{ format(inputs.tle         && '--tle {0}',         inputs.tle) }} \
+          ${{ format(inputs.mle         && '--mle {0}',         inputs.mle) }} \
           ${{ format(inputs.prev-result && '--prev-result {0}', inputs.prev-result) }} \
           ${{ format(inputs.split-size  && '--split {0}',       inputs.split-size) }} \
           ${{ format(inputs.split-index && '--split-index {0}', inputs.split-index) }} \
