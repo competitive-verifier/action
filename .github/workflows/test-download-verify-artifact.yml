@@ -22,17 +22,17 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Upload not json
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: not_json
           path: download-verify-artifact/tests/not_json.txt
       - name: Upload multiple file
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: multiple
           path: download-verify-artifact/tests/*.json
       - name: Upload file
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: file
           path: download-verify-artifact/tests/verify_files.json
