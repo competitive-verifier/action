@@ -47,6 +47,7 @@ jobs:
         uses: ./upload-verify-artifact
         with:
           file: upload-verify-artifact/tests/sp ace.json
+          artifact-name: name_has_space
 
       - name: Upload wildcard single
         id: wildcard-single
