@@ -43,13 +43,13 @@ runs:
         echo "artifact-root=$output" >> $env:GITHUB_OUTPUT
 
     - name: Download artifact
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       if: ${{!fromJSON(inputs.download-all)}}
       with:
         name: ${{ inputs.artifact-name }}
         path: ${{ steps.artifact-path.outputs.artifact-root }}/${{ inputs.artifact-name }}
     - name: Download all artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       if: ${{fromJSON(inputs.download-all)}}
       with:
         path: ${{ steps.artifact-path.outputs.artifact-root }}
