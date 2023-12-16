@@ -8,7 +8,7 @@ See [action.yml](action.yml) or [competitive-verifier/competitive-verifier](http
 ```yml
       # include & exclude
       - name: oj-resolve
-        uses: competitive-verifier/actions/oj-resolve@v1
+        uses: competitive-verifier/actions/oj-resolve@v2
         with:
           output-path: ./verify.json
           include: |
@@ -21,7 +21,7 @@ See [action.yml](action.yml) or [competitive-verifier/competitive-verifier](http
       # Resolve from all files
       - name: oj-resolve all files
         id: resolve
-        uses: competitive-verifier/actions/oj-resolve@v1
+        uses: competitive-verifier/actions/oj-resolve@v2
         with:
           output-path: ./verify-all.json
 

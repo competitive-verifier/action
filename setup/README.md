@@ -7,7 +7,7 @@ See [action.yml](action.yml) or [competitive-verifier/competitive-verifier](http
 
 ```yml
       - name: Set up competitive-verifier
-        uses: competitive-verifier/actions/setup@v1
+        uses: competitive-verifier/actions/setup@v2
         with:
           cache-pip: true
 ```

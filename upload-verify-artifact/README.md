@@ -7,10 +7,10 @@ See [action.yml](action.yml) or [competitive-verifier/competitive-verifier](http
 
 ```yml
       - name: Set up competitive-verifier
-        uses: competitive-verifier/actions/setup@v1
+        uses: competitive-verifier/actions/setup@v2
 
       - name: Upload artifact
-        uses: competitive-verifier/actions/upload-verify-artifact@v1
+        uses: competitive-verifier/actions/upload-verify-artifact@v2
         with:
           file: verify_files.json
 ```

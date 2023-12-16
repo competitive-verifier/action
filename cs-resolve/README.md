@@ -15,7 +15,7 @@ See [action.yml](action.yml) or [competitive-verifier/csharp-resolver](https://g
 
       # include & exclude
       - name: cs-resolve
-        uses: competitive-verifier/actions/cs-resolve@v1
+        uses: competitive-verifier/actions/cs-resolve@v2
         with:
           solution: YourSolution.sln
           output-path: ./verify.json

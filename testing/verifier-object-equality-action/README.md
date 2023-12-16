@@ -24,16 +24,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up competitive-verifier
-        uses: competitive-verifier/actions/setup@v1
+        uses: competitive-verifier/actions/setup@v2
 
       - name: equal
-        uses: competitive-verifier/actions/verifier-object-equality-action@v1
+        uses: competitive-verifier/actions/verifier-object-equality-action@v2
         with:
           class: VerificationInput
           file1: file-foo.json
           file2: file-bar.json
       - name: not-equal
-        uses: competitive-verifier/actions/verifier-object-equality-action@v1
+        uses: competitive-verifier/actions/verifier-object-equality-action@v2
         with:
           class: VerificationInput
           file1: file-foo.json

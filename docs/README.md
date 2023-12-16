@@ -8,7 +8,7 @@ See [action.yml](action.yml) or [competitive-verifier/competitive-verifier](http
 
 ```yml
       - name: Create docs
-        uses: competitive-verifier/actions/docs@v1
+        uses: competitive-verifier/actions/docs@v2
         with:
           verify-files: verify-files.json
           verify-result: result*/competitive-verifier-result.json

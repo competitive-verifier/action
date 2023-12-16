@@ -8,7 +8,7 @@ See [action.yml](action.yml) or [competitive-verifier/competitive-verifier](http
 
 ```yml
       - name: Check
-        uses: competitive-verifier/actions/check@v1
+        uses: competitive-verifier/actions/check@v2
         with:
           verify-result: result*/competitive-verifier-result.json
 ```

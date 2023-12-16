@@ -7,18 +7,18 @@ See [action.yml](action.yml) or [competitive-verifier/competitive-verifier](http
 
 ```yml
       - name: Set up competitive-verifier
-        uses: competitive-verifier/actions/setup@v1
+        uses: competitive-verifier/actions/setup@v2
 
       - name: Use glob
         id: glob
-        uses: competitive-verifier/actions/merge-result@v1
+        uses: competitive-verifier/actions/merge-result@v2
         with:
           result-files: tests/file*.json
           output-path: merged-glob.json
 
       - name: Use list
         id: list
-        uses: competitive-verifier/actions/merge-result@v1
+        uses: competitive-verifier/actions/merge-result@v2
         with:
           result-files: |
             tests/file1.json
