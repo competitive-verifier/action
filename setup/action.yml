@@ -30,21 +30,21 @@ runs:
       with:
         python-version: ${{inputs.python-version}}
 
-    - uses: actions/cache@v3
+    - uses: actions/cache@v4
       if: startsWith(runner.os, 'Linux') && fromJson(inputs.cache-pip)
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-competitive-verifier-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-pip-competitive-verifier-
-    - uses: actions/cache@v3
+    - uses: actions/cache@v4
       if: startsWith(runner.os, 'macOS') && fromJson(inputs.cache-pip)
       with:
         path: ~/Library/Caches/pip
         key: ${{ runner.os }}-pip-competitive-verifier-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-pip-competitive-verifier-
-    - uses: actions/cache@v3
+    - uses: actions/cache@v4
       if: startsWith(runner.os, 'Windows') && fromJson(inputs.cache-pip)
       with:
         path: ~\AppData\Local\pip\Cache
