@@ -27,13 +27,13 @@ jobs:
         uses: competitive-verifier/actions/setup@v2
 
       - name: equal
-        uses: competitive-verifier/actions/verifier-object-equality-action@v2
+        uses: competitive-verifier/actions/testing/verifier-object-equality-action@v2
         with:
           class: VerificationInput
           file1: file-foo.json
           file2: file-bar.json
       - name: not-equal
-        uses: competitive-verifier/actions/verifier-object-equality-action@v2
+        uses: competitive-verifier/actions/testing/verifier-object-equality-action@v2
         with:
           class: VerificationInput
           file1: file-foo.json
