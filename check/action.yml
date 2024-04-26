@@ -32,9 +32,8 @@ runs:
       id: check
       working-directory: ${{inputs.working-directory}}
       run: |
-        competitive-verifier check $COMPETITIVE_RESULT_FILES | tee "$RUNNER_TEMP/.temp.competitive-verifier.check.yml"
-      env:
-        COMPETITIVE_RESULT_FILES: ${{ inputs.verify-result }}
+        COMPETITIVE_RESULT_FILES=( ${{ inputs.verify-result }} )
+        competitive-verifier check "${COMPETITIVE_RESULT_FILES[@]}" | tee "$RUNNER_TEMP/.temp.competitive-verifier.check.yml"
 
     - name: Result
       shell: bash
