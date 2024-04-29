@@ -91,3 +91,33 @@ jobs:
           [ "${{ steps.check-success-subdir.outputs.result-count-success }}" = "3" ]
           [ "${{ steps.check-success-subdir.outputs.result-count-failure }}" = "0" ]
           [ "${{ steps.check-success-subdir.outputs.result-count-skipped }}" = "0" ]
+
+      - name: Check space success
+        id: check-space-success
+        uses: ./check
+        with:
+          verify-result: |
+            'check/tests/space X/success.json'
+      - name: Test space success
+        run: |
+          [ "${{ steps.check-space-success.outcome }}" = "success" ]
+          [ "${{ steps.check-space-success.outputs.result-count }}" = "1" ]
+          [ "${{ steps.check-space-success.outputs.result-count-success }}" = "1" ]
+          [ "${{ steps.check-space-success.outputs.result-count-failure }}" = "0" ]
+          [ "${{ steps.check-space-success.outputs.result-count-skipped }}" = "0" ]
+
+      - name: Check space exp
+        id: check-space-exp
+        uses: ./check
+        continue-on-error: true
+        with:
+          verify-result: |
+            check/tests/space\ X/*.json
+            check/tests/failure-result.json
+      - name: Test space exp
+        run: |
+          [ "${{ steps.check-space-exp.outcome }}" = "failure" ]
+          [ "${{ steps.check-space-exp.outputs.result-count }}" = "5" ]
+          [ "${{ steps.check-space-exp.outputs.result-count-success }}" = "2" ]
+          [ "${{ steps.check-space-exp.outputs.result-count-failure }}" = "2" ]
+          [ "${{ steps.check-space-exp.outputs.result-count-skipped }}" = "1" ]

@@ -1,0 +1,15 @@
+{
+    "total_seconds": 6.459829,
+    "files": {
+        "tests/python/union_find_yosupo1.test.py": {
+            "verifications": [
+                {
+                    "status": "success",
+                    "elapsed": 6.452828,
+                    "last_execution_time": "2022-11-14T02:30:23.293834+09:00"
+                }
+            ],
+            "newest": true
+        }
+    }
+}
