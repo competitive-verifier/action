@@ -37,12 +37,22 @@ runs:
       working-directory: ${{inputs.working-directory}}
       run: |
         set -f
-        competitive-verifier oj-resolve --include $COMPETITIVE_include --exclude $COMPETITIVE_exclude $(set +f && echo $COMPETITIVE_config) | tee "$COMPETITIVE_OUTPUT_FILE"
+        COMPETITIVE_include=(${{ inputs.include }})
+        if test "${#COMPETITIVE_include[@]}" -ne 0; then
+          COMPETITIVE_include=("--include" "${COMPETITIVE_include[@]}")
+        fi
+
+        COMPETITIVE_exclude=(${{ inputs.exclude }})
+        if test "${#COMPETITIVE_exclude[@]}" -ne 0; then
+          COMPETITIVE_exclude=("--exclude" "${COMPETITIVE_exclude[@]}")
+        fi
+
+        competitive-verifier oj-resolve \
+          "${COMPETITIVE_include[@]}" \
+          "${COMPETITIVE_exclude[@]}" \
+          ${{ format(inputs.config && '--config "{0}"', inputs.config) }} | tee "$COMPETITIVE_OUTPUT_FILE"
         echo "json-path=$COMPETITIVE_OUTPUT_FILE" >> $GITHUB_OUTPUT
       env:
-        COMPETITIVE_include: ${{ inputs.include }}
-        COMPETITIVE_exclude: ${{ inputs.exclude }}
-        COMPETITIVE_config: ${{ format(inputs.config && '--config {0}', inputs.config) }}
         COMPETITIVE_OUTPUT_FILE: ${{ inputs.output-path }}
 
     - name: Path

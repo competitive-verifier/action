@@ -27,9 +27,9 @@ runs:
       shell: bash
       working-directory: ${{inputs.working-directory}}
       run: |
-        competitive-verifier merge-result $COMPETITIVE_FILES | tee "$COMPETITIVE_OUTPUT_FILE"
+        COMPETITIVE_RESULT_FILES=( ${{ inputs.result-files }} )
+        competitive-verifier merge-result "${COMPETITIVE_RESULT_FILES[@]}" | tee "$COMPETITIVE_OUTPUT_FILE"
       env:
-        COMPETITIVE_FILES: ${{ inputs.result-files }}
         COMPETITIVE_OUTPUT_FILE: ${{ inputs.output-path }}
 
     - name: Path

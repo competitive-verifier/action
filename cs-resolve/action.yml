@@ -47,20 +47,38 @@ runs:
       id: resolve
       working-directory: ${{inputs.working-directory}}
       run: |
+        COMPETITIVE_unittest=(${{ inputs.unittest-result }})
+        if test "${#COMPETITIVE_unittest[@]}" -ne 0; then
+          COMPETITIVE_unittest=("--unittest" "${COMPETITIVE_unittest[@]}")
+        fi
+        COMPETITIVE_problems=(${{ inputs.problems }})
+        if test "${#COMPETITIVE_problems[@]}" -ne 0; then
+          COMPETITIVE_problems=("--problems" "${COMPETITIVE_problems[@]}")
+        fi
+        COMPETITIVE_msbuild_props=(${{ inputs.msbuild-properties }})
+        if test "${#COMPETITIVE_msbuild_props[@]}" -ne 0; then
+          COMPETITIVE_msbuild_props=("--properties" "${COMPETITIVE_msbuild_props[@]}")
+        fi
+
         set -f
+        COMPETITIVE_include=(${{ inputs.include }})
+        if test "${#COMPETITIVE_include[@]}" -ne 0; then
+          COMPETITIVE_include=("--include" "${COMPETITIVE_include[@]}")
+        fi
+
+        COMPETITIVE_exclude=(${{ inputs.exclude }})
+        if test "${#COMPETITIVE_exclude[@]}" -ne 0; then
+          COMPETITIVE_exclude=("--exclude" "${COMPETITIVE_exclude[@]}")
+        fi
+
         competitive-verifier-cs-resolver ${{inputs.solution}} \
-          $(set +f && echo $COMPETITIVE_unittest) \
-          $(set +f && echo $COMPETITIVE_problems) \
-          $COMPETITIVE_include \
-          $COMPETITIVE_exclude \
-          $COMPETITIVE_msbuild_props \
+          "${COMPETITIVE_unittest[@]}" \
+          "${COMPETITIVE_problems[@]}" \
+          "${COMPETITIVE_include[@]}" \
+          "${COMPETITIVE_exclude[@]}" \
+          "${COMPETITIVE_msbuild_props[@]}" \
           | tee "$COMPETITIVE_OUTPUT_FILE"
       env:
-        COMPETITIVE_include: ${{ format(inputs.include && '--include {0}', inputs.include) }}
-        COMPETITIVE_exclude: ${{ format(inputs.exclude && '--exclude {0}', inputs.exclude) }}
-        COMPETITIVE_unittest: ${{ format(inputs.unittest-result && '--unittest {0}', inputs.unittest-result) }}
-        COMPETITIVE_problems: ${{ format(inputs.problems && '--problems {0}', inputs.problems) }}
-        COMPETITIVE_msbuild_props: ${{ format(inputs.msbuild-properties && '--properties {0}', inputs.msbuild-properties) }}
         COMPETITIVE_OUTPUT_FILE: ${{ inputs.output-path }}
 
     - name: Path

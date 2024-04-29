@@ -41,16 +41,26 @@ runs:
       id: docs
       working-directory: ${{inputs.working-directory}}
       run: |
-        COMPETITIVE_RESULT_FILES="$(echo $COMPETITIVE_RESULT_FILES)"
+        COMPETITIVE_RESULT_FILES=( ${{ inputs.verify-result }} )
+        set -f
+
+        COMPETITIVE_include=(${{ inputs.include }})
+        if test "${#COMPETITIVE_include[@]}" -ne 0; then
+          COMPETITIVE_include=("--include" "${COMPETITIVE_include[@]}")
+        fi
+
+        COMPETITIVE_exclude=(${{ inputs.exclude }})
+        if test "${#COMPETITIVE_exclude[@]}" -ne 0; then
+          COMPETITIVE_exclude=("--exclude" "${COMPETITIVE_exclude[@]}")
+        fi
+
         competitive-verifier docs \
-          $COMPETITIVE_RESULT_FILES \
+          "${COMPETITIVE_RESULT_FILES[@]}" \
+          "${COMPETITIVE_include[@]}" \
+          "${COMPETITIVE_exclude[@]}" \
           ${{ fromJson(inputs.write-summary) && '--write-summary' || '' }} \
           ${{ format(inputs.docs && '--docs {0}', inputs.docs) }} \
-          --include $COMPETITIVE_include \
-          --exclude $COMPETITIVE_exclude \
           --destination "${{ inputs.destination }}"
       env:
-        COMPETITIVE_include: ${{ inputs.include }}
-        COMPETITIVE_exclude: ${{ inputs.exclude }}
         COMPETITIVE_VERIFY_FILES_PATH: ${{ inputs.verify-files || env.COMPETITIVE_VERIFY_FILES_PATH }}
         COMPETITIVE_RESULT_FILES: ${{ inputs.verify-result }}
