@@ -67,7 +67,7 @@ runs:
       run: |
         if competitive-verifier \
           verify --check-error \
-          ${{ fromJson(inputs.verbose)       && '--verbose'       || '' }} \
+          ${{ (fromJson(inputs.verbose) || runner.debug)   && '--verbose'       || '' }} \
           ${{ fromJson(inputs.write-summary) && '--write-summary' || '' }} \
           ${{ format(inputs.timeout     && '--timeout "{0}"',     inputs.timeout) }} \
           ${{ format(inputs.tle         && '--tle "{0}"',         inputs.tle) }} \
