@@ -51,7 +51,7 @@ runs:
         key: ${{ runner.os }}-pip-competitive-verifier-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-pip-competitive-verifier-
-  
+
     - name: Install competitive-verifier
       shell: bash
       id: install
@@ -61,5 +61,8 @@ runs:
         source venv/bin/activate
         pip install "${{inputs.package}}"
         echo "::endgroup::"
-        VERSION=$(venv/bin/competitive-verifier --version)
+        VERSION=$(competitive-verifier --version)
         echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "source $(pwd)/venv/bin/activate" >> $GITHUB_ENV
+
+
