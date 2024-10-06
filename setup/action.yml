@@ -63,6 +63,4 @@ runs:
         echo "::endgroup::"
         VERSION=$(competitive-verifier --version)
         echo "version=$VERSION" >> $GITHUB_OUTPUT
-        echo "source $(pwd)/venv/bin/activate" >> $GITHUB_ENV
-
-
+        echo "PATH=$(pwd)/venv/bin:\$PATH" >> $GITHUB_ENV
