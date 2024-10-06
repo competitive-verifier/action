@@ -57,10 +57,7 @@ runs:
       id: install
       run: |
         echo "::group::pip install"
-        python3 -m venv venv
-        source venv/bin/activate
-        pip install "${{inputs.package}}"
+        pip install "${{inputs.package}}" --break-system-packages
         echo "::endgroup::"
         VERSION=$(competitive-verifier --version)
         echo "version=$VERSION" >> $GITHUB_OUTPUT
-        echo "PATH=$(pwd)/venv/bin:\$PATH" >> $GITHUB_ENV
