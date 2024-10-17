@@ -57,8 +57,7 @@ runs:
       id: install
       run: |
         echo "::group::pip install"
-        pip install "${{inputs.package}}"
+        pip install "${{ inputs.package }}" || pip install "${{ inputs.package }}" --break-system-packages
         echo "::endgroup::"
         VERSION=$(competitive-verifier --version)
-        echo "version=$VERSION"
         echo "version=$VERSION" >> $GITHUB_OUTPUT
